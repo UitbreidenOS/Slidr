@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafafa;
+  --foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --border: #e5e5e5;
+  --ring: #1a1a2e;
+  --accent: #e94560;
+  --accent-foreground: #ffffff;
+  --surface: #ffffff;
+  --destructive: #ef4444;
+
+  /* Motion — Emil Kowalski easings (animations.dev) */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-surface: var(--surface);
+  --color-destructive: var(--destructive);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Dialog / overlay motion (Radix data-state) */
+@keyframes oc-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes oc-overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes oc-dialog-in {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes oc-dialog-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+}
+
+[data-oc-overlay][data-state="open"] {
+  animation: oc-overlay-in 180ms var(--ease-out-strong);
+}
+[data-oc-overlay][data-state="closed"] {
+  animation: oc-overlay-out 140ms var(--ease-out-strong);
+}
+[data-oc-dialog][data-state="open"] {
+  animation: oc-dialog-in 200ms var(--ease-out-strong);
+}
+[data-oc-dialog][data-state="closed"] {
+  animation: oc-dialog-out 150ms var(--ease-out-strong);
+}
+
+@keyframes oc-fade-scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes oc-fade-scale-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.97); }
+}
+[data-oc-fade-scale][data-state="open"] {
+  animation: oc-fade-scale-in 220ms var(--ease-out-strong);
+}
+[data-oc-fade-scale][data-state="closed"] {
+  animation: oc-fade-scale-out 160ms var(--ease-out-strong);
+}
+
+/* Enter transitions for list items and messages (uses @starting-style) */
+.oc-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 220ms var(--ease-out-strong),
+              transform 220ms var(--ease-out-strong);
+}
+@starting-style {
+  .oc-enter {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.oc-enter-pop {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms var(--ease-out-strong),
+              transform 200ms var(--ease-out-strong);
+  transform-origin: center;
+}
+@starting-style {
+  .oc-enter-pop {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+.oc-fade {
+  opacity: 1;
+  transition: opacity 180ms var(--ease-out-strong);
+}
+@starting-style {
+  .oc-fade {
+    opacity: 0;
+  }
+}
+
+/* Stagger for initial card grid — uses animation-fill-mode: backwards so hover/active transforms take over after mount completes */
+.oc-stagger > * {
+  animation: oc-stagger-in 280ms var(--ease-out-strong) backwards;
+}
+.oc-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.oc-stagger > *:nth-child(2) { animation-delay: 40ms; }
+.oc-stagger > *:nth-child(3) { animation-delay: 80ms; }
+.oc-stagger > *:nth-child(4) { animation-delay: 120ms; }
+.oc-stagger > *:nth-child(5) { animation-delay: 160ms; }
+.oc-stagger > *:nth-child(6) { animation-delay: 200ms; }
+.oc-stagger > *:nth-child(7) { animation-delay: 240ms; }
+.oc-stagger > *:nth-child(8) { animation-delay: 280ms; }
+.oc-stagger > *:nth-child(9) { animation-delay: 320ms; }
+.oc-stagger > *:nth-child(10) { animation-delay: 360ms; }
+.oc-stagger > *:nth-child(11) { animation-delay: 400ms; }
+.oc-stagger > *:nth-child(12) { animation-delay: 440ms; }
+
+@keyframes oc-stagger-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Slide preview crossfade on slide change (key-based remount) */
+@keyframes oc-slide-in {
+  from { opacity: 0; transform: translateX(var(--oc-slide-from, 12px)); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.oc-slide-in {
+  animation: oc-slide-in 240ms var(--ease-out-strong);
+}
+
+/* Press feedback baseline — buttons use this via utility */
+.oc-press {
+  transition: transform 160ms var(--ease-out-strong),
+              background-color 160ms ease,
+              border-color 160ms ease,
+              color 160ms ease,
+              box-shadow 160ms var(--ease-out-strong);
+}
+.oc-press:active {
+  transform: scale(0.97);
+}
+
+/* Streaming cursor (replaces raw animate-pulse for the chat caret) */
+@keyframes oc-caret {
+  0%, 55% { opacity: 1; }
+  60%, 100% { opacity: 0; }
+}
+.oc-caret {
+  animation: oc-caret 900ms steps(1, end) infinite;
+}
+
+/* Reduced motion — fewer and gentler, not zero (per Emil's skill) */
+@media (prefers-reduced-motion: reduce) {
+  [data-oc-overlay][data-state="open"],
+  [data-oc-overlay][data-state="closed"],
+  [data-oc-dialog][data-state="open"],
+  [data-oc-dialog][data-state="closed"],
+  [data-oc-fade-scale][data-state="open"],
+  [data-oc-fade-scale][data-state="closed"] {
+    animation-duration: 0.01ms !important;
+  }
+  .oc-stagger > *,
+  .oc-slide-in {
+    animation: none !important;
+  }
+  .oc-enter,
+  .oc-enter-pop {
+    transition: opacity 140ms ease;
+    transform: none !important;
+  }
+  .oc-press:active {
+    transform: none;
+  }
+}

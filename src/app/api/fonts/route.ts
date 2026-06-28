@@ -1,0 +1,49 @@
+import { NextResponse } from "next/server";
+
+// Curated list of Google Fonts that work well for social media carousels
+const POPULAR_FONTS = [
+  { name: "Inter", category: "sans-serif" },
+  { name: "Playfair Display", category: "serif" },
+  { name: "Montserrat", category: "sans-serif" },
+  { name: "Poppins", category: "sans-serif" },
+  { name: "Roboto", category: "sans-serif" },
+  { name: "Open Sans", category: "sans-serif" },
+  { name: "Lato", category: "sans-serif" },
+  { name: "Oswald", category: "sans-serif" },
+  { name: "Raleway", category: "sans-serif" },
+  { name: "Merriweather", category: "serif" },
+  { name: "Nunito", category: "sans-serif" },
+  { name: "Ubuntu", category: "sans-serif" },
+  { name: "Rubik", category: "sans-serif" },
+  { name: "Work Sans", category: "sans-serif" },
+  { name: "DM Sans", category: "sans-serif" },
+  { name: "Space Grotesk", category: "sans-serif" },
+  { name: "Outfit", category: "sans-serif" },
+  { name: "Sora", category: "sans-serif" },
+  { name: "Manrope", category: "sans-serif" },
+  { name: "Plus Jakarta Sans", category: "sans-serif" },
+  { name: "Bebas Neue", category: "sans-serif" },
+  { name: "Anton", category: "sans-serif" },
+  { name: "Abril Fatface", category: "display" },
+  { name: "Cormorant Garamond", category: "serif" },
+  { name: "Libre Baskerville", category: "serif" },
+  { name: "Lora", category: "serif" },
+  { name: "EB Garamond", category: "serif" },
+  { name: "Crimson Text", category: "serif" },
+  { name: "Source Serif Pro", category: "serif" },
+  { name: "DM Serif Display", category: "serif" },
+  { name: "Bitter", category: "serif" },
+  { name: "Vollkorn", category: "serif" },
+  { name: "Caveat", category: "handwriting" },
+  { name: "Dancing Script", category: "handwriting" },
+  { name: "Pacifico", category: "handwriting" },
+  { name: "Satisfy", category: "handwriting" },
+  { name: "Great Vibes", category: "handwriting" },
+  { name: "JetBrains Mono", category: "monospace" },
+  { name: "Fira Code", category: "monospace" },
+  { name: "Space Mono", category: "monospace" },
+];
+
+export async function GET() {
+  return NextResponse.json({ fonts: POPULAR_FONTS });
+}

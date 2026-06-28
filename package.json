@@ -1,0 +1,54 @@
+{
+  "name": "slidr",
+  "version": "1.0.0",
+  "description": "Slidr — CLI-agnostic AI carousel maker for LinkedIn, Instagram & TikTok. BYOK or use any coding CLI (Antigravity, Claude Code, Codex). 15 themes, multi-platform sizing, watermark + $11 lifetime unlock.",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tushar2704/Slidr"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "doctor": "node scripts/doctor.mjs"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-slot": "^1.2.4",
+    "archiver": "^7.0.1",
+    "async-mutex": "^0.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cross-spawn": "^7.0.6",
+    "lucide-react": "^1.8.0",
+    "next": "16.2.3",
+    "openai": "^4.77.0",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^24.40.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "^0.34.5",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/archiver": "^7.0.0",
+    "@types/cross-spawn": "^6.0.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
