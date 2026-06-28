@@ -26,7 +26,7 @@ export function LlmConfigModal({
   const [baseURL, setBaseURL] = useState(config.baseURL);
   const [apiKey, setApiKey] = useState(config.apiKey);
   const [model, setModel] = useState(config.model);
-  const [selectedCli, setSelectedCli] = useState<string | null>(config.cli);
+  const [selectedCli, setSelectedCli] = useState<string | null>(config.cli ?? null);
   const [saving, setSaving] = useState(false);
   const [showKey, setShowKey] = useState(false);
 
@@ -36,7 +36,7 @@ export function LlmConfigModal({
       setBaseURL(config.baseURL);
       setApiKey(config.apiKey);
       setModel(config.model);
-      setSelectedCli(config.cli);
+      setSelectedCli(config.cli ?? null);
     }
   }, [open, config]);
 

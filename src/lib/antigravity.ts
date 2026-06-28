@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import type { LlmStreamEvent } from "./types";
+import type { LlmStreamEvent } from "./llm/types";
 
 /**
  * Antigravity CLI (agy) spawner.

@@ -21,11 +21,12 @@ export class HttpClient {
     tools: LlmTool[],
     model: string
   ): AsyncGenerator<LlmStreamEvent> {
-    const openaiMessages = messages.map((m) => ({
-      role: m.role as "system" | "user" | "assistant" | "tool",
-      content: m.content,
-      ...(m.tool_call_id ? { tool_call_id: m.tool_call_id } : {}),
-    }));
+    const openaiMessages = messages.map((m) => {
+      if (m.role === "tool" && m.tool_call_id) {
+        return { role: "tool" as const, content: m.content, tool_call_id: m.tool_call_id };
+      }
+      return { role: m.role as "system" | "user" | "assistant", content: m.content };
+    });
 
     const openaiTools = tools.map((t) => ({
       type: "function" as const,

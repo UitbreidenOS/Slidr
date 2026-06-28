@@ -9,9 +9,11 @@ interface AspectRatioSelectorProps {
 }
 
 const RATIOS: { value: AspectRatio; label: string; icon: { w: number; h: number } }[] = [
-  { value: "1:1", label: "Square", icon: { w: 16, h: 16 } },
-  { value: "4:5", label: "Portrait", icon: { w: 16, h: 20 } },
-  { value: "9:16", label: "Story", icon: { w: 12, h: 22 } },
+  { value: "ig-1:1", label: "Square", icon: { w: 16, h: 16 } },
+  { value: "ig-4:5", label: "Portrait", icon: { w: 16, h: 20 } },
+  { value: "ig-9:16", label: "Story", icon: { w: 12, h: 22 } },
+  { value: "li-4:5", label: "LinkedIn", icon: { w: 16, h: 20 } },
+  { value: "tt-9:16", label: "TikTok", icon: { w: 12, h: 22 } },
 ];
 
 export function AspectRatioSelector({
@@ -19,13 +21,13 @@ export function AspectRatioSelector({
   onChange,
 }: AspectRatioSelectorProps) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 flex-wrap">
       {RATIOS.map((ratio) => (
         <button
           key={ratio.value}
           onClick={() => onChange(ratio.value)}
           className={cn(
-            "oc-press flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs",
+            "slidr-press flex flex-col items-center gap-1 px-2.5 py-2 rounded-lg text-xs",
             value === ratio.value
               ? "bg-foreground text-background"
               : "hover:bg-muted text-muted-foreground"
@@ -41,7 +43,7 @@ export function AspectRatioSelector({
             )}
             style={{ width: ratio.icon.w, height: ratio.icon.h }}
           />
-          <span>{ratio.value}</span>
+          <span className="font-mono">{ratio.value}</span>
         </button>
       ))}
     </div>

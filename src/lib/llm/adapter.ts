@@ -41,6 +41,7 @@ export async function executeToolCall(
           return { success: false, message: "Missing required 'html' parameter" };
         }
         const slide = await addSlide(carouselId, html, notes);
+        if (!slide) return { success: false, message: "Failed to create slide (carousel full or not found)" };
         return { success: true, message: `Created slide ${slide.id}`, data: slide };
       }
       case "update_slide": {

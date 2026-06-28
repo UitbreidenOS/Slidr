@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { listCarousels, createCarousel } from "@/lib/carousels";
 import type { AspectRatio } from "@/types/carousel";
+import { ALL_ASPECT_RATIOS } from "@/types/carousel";
 
 export async function GET() {
   const carousels = await listCarousels();
@@ -22,10 +23,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const validRatios: AspectRatio[] = ["1:1", "4:5", "9:16"];
-    const ratio = validRatios.includes(aspectRatio as AspectRatio)
+    const ratio = ALL_ASPECT_RATIOS.includes(aspectRatio as AspectRatio)
       ? (aspectRatio as AspectRatio)
-      : "4:5";
+      : "ig-4:5";
 
     const carousel = await createCarousel(name.trim(), ratio);
     return NextResponse.json(carousel, { status: 201 });

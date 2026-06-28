@@ -20,14 +20,14 @@ export function CreateCarouselDialog({
   onCreate,
 }: CreateCarouselDialogProps) {
   const [name, setName] = useState("");
-  const [aspectRatio, setAspectRatio] = useState<AspectRatio>("4:5");
+  const [aspectRatio, setAspectRatio] = useState<AspectRatio>("ig-4:5");
 
   const handleCreate = () => {
     const trimmed = name.trim();
     if (!trimmed) return;
     onCreate(trimmed, aspectRatio);
     setName("");
-    setAspectRatio("4:5");
+    setAspectRatio("ig-4:5");
     onOpenChange(false);
   };
 
