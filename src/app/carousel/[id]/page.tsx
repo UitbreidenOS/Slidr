@@ -3,19 +3,23 @@
 import { useEffect, useState, useCallback, useRef, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Trash2, Grid3X3, Bookmark, Maximize2 } from "lucide-react";
+import { Trash2, Grid3X3, Bookmark, Maximize2, Settings, Lock, Palette, Check } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ChatPanel } from "@/components/chat/ChatPanel";
 import { CarouselPreview } from "@/components/editor/CarouselPreview";
 import { SlideFilmstrip } from "@/components/editor/SlideFilmstrip";
-import { AspectRatioSelector } from "@/components/editor/AspectRatioSelector";
+import { SizeSelector } from "@/components/editor/SizeSelector";
 import { ExportButton } from "@/components/editor/ExportButton";
 import { CaptionPanel } from "@/components/editor/CaptionPanel";
 import { SafeZoneOverlay } from "@/components/editor/SafeZoneOverlay";
 import { FullscreenPreview } from "@/components/editor/FullscreenPreview";
+import { ThemeGallery } from "@/components/themes/ThemeGallery";
+import { LlmConfigModal } from "@/components/llm/LlmConfigModal";
+import { LicenseModal } from "@/components/license/LicenseModal";
 import type { Carousel, AspectRatio } from "@/types/carousel";
+import type { LlmConfig, CliInfo } from "@/lib/llm/types";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -27,11 +31,18 @@ export default function CarouselEditorPage({ params }: PageProps) {
   const [carousel, setCarousel] = useState<Carousel | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
-  const [claudeAvailable, setClaudeAvailable] = useState(true);
+  const [llmConfigured, setLlmConfigured] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showSafeZones, setShowSafeZones] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
+  const [showThemePanel, setShowThemePanel] = useState(false);
+
+  // Modals
+  const [showLlmConfig, setShowLlmConfig] = useState(false);
+  const [showLicense, setShowLicense] = useState(false);
+  const [llmConfig, setLlmConfig] = useState<LlmConfig | null>(null);
+  const [detectedClis, setDetectedClis] = useState<CliInfo[]>([]);
 
   // Confirm dialog state
   const [confirmState, setConfirmState] = useState<{
@@ -41,7 +52,6 @@ export default function CarouselEditorPage({ params }: PageProps) {
     onConfirm: () => void;
   }>({ open: false, title: "", description: "", onConfirm: () => {} });
 
-  // Ref for focusing chat input when + button is clicked
   const chatInputRef = useRef<HTMLTextAreaElement | null>(null);
 
   const fetchCarousel = useCallback(async () => {
@@ -54,7 +64,6 @@ export default function CarouselEditorPage({ params }: PageProps) {
       if (res.ok) {
         const data = await res.json();
         setCarousel((prev) => {
-          // If new slides were added during generation, jump to the latest slide
           if (prev && data.slides.length > prev.slides.length) {
             setActiveSlide(data.slides.length - 1);
           } else {
@@ -70,20 +79,25 @@ export default function CarouselEditorPage({ params }: PageProps) {
     }
   }, [id]);
 
-  // Initial data load
+  const fetchLlmConfig = useCallback(async () => {
+    try {
+      const res = await fetch("/api/llm-config");
+      const data = await res.json();
+      setLlmConfig(data.config);
+      setDetectedClis(data.detectedClis || []);
+      setLlmConfigured(data.httpConfigured || data.cliConfigured);
+    } catch {
+      // ignore
+    }
+  }, []);
+
   useEffect(() => {
     const load = async () => {
       await fetchCarousel();
-      try {
-        const res = await fetch("/api/chat/check");
-        const data: { available?: boolean } = await res.json();
-        if (data.available === false) setClaudeAvailable(false);
-      } catch {
-        // assume available
-      }
+      await fetchLlmConfig();
     };
     load();
-  }, [fetchCarousel]);
+  }, [fetchCarousel, fetchLlmConfig]);
 
   // Poll for carousel updates while AI is generating slides
   useEffect(() => {
@@ -100,6 +114,19 @@ export default function CarouselEditorPage({ params }: PageProps) {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ aspectRatio: ratio }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setCarousel(updated);
+    }
+  };
+
+  const handleThemeChange = async (themeId: string | null) => {
+    if (!carousel) return;
+    const res = await fetch(`/api/carousels/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ themeId }),
     });
     if (res.ok) {
       const updated = await res.json();
@@ -166,11 +193,19 @@ export default function CarouselEditorPage({ params }: PageProps) {
 
   const handleAddSlideRequest = useCallback(() => {
     setChatOpen(true);
-    // Focus chat input after a tick (to let panel render)
     setTimeout(() => {
       chatInputRef.current?.focus();
     }, 100);
   }, []);
+
+  const handleSaveLlmConfig = async (config: LlmConfig) => {
+    await fetch("/api/llm-config", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(config),
+    });
+    await fetchLlmConfig();
+  };
 
   if (notFound) {
     return (
@@ -211,6 +246,7 @@ export default function CarouselEditorPage({ params }: PageProps) {
             setCarousel(updated);
           }
         }}
+        onSettingsClick={() => setShowLlmConfig(true)}
       />
 
       {/* Fullscreen preview */}
@@ -221,6 +257,23 @@ export default function CarouselEditorPage({ params }: PageProps) {
         aspectRatio={carousel.aspectRatio}
         activeIndex={activeSlide}
         onActiveChange={setActiveSlide}
+      />
+
+      {/* LLM Config Modal */}
+      {llmConfig && (
+        <LlmConfigModal
+          open={showLlmConfig}
+          onClose={() => setShowLlmConfig(false)}
+          config={llmConfig}
+          detectedClis={detectedClis}
+          onSave={handleSaveLlmConfig}
+        />
+      )}
+
+      {/* License Modal */}
+      <LicenseModal
+        open={showLicense}
+        onClose={() => setShowLicense(false)}
       />
 
       {/* Confirm dialog */}
@@ -241,11 +294,31 @@ export default function CarouselEditorPage({ params }: PageProps) {
           <div className="oc-fade w-80 border-r border-border shrink-0 flex flex-col bg-surface">
             <ChatPanel
               carouselId={id}
-              claudeAvailable={claudeAvailable}
+              claudeAvailable={llmConfigured}
               referenceImages={carousel.referenceImages || []}
               onStreamStart={handleStreamStart}
               onStreamEnd={handleStreamEnd}
               chatInputRef={chatInputRef}
+              themeId={carousel.themeId}
+            />
+          </div>
+        )}
+
+        {/* Theme panel (collapsible) */}
+        {showThemePanel && (
+          <div className="oc-fade w-72 border-r border-border shrink-0 flex flex-col bg-surface p-4 overflow-y-auto">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-semibold flex items-center gap-1.5">
+                <Palette className="h-4 w-4" />
+                Themes
+              </span>
+              <Button variant="ghost" size="sm" onClick={() => setShowThemePanel(false)}>
+                ×
+              </Button>
+            </div>
+            <ThemeGallery
+              selectedThemeId={carousel.themeId ?? null}
+              onSelect={handleThemeChange}
             />
           </div>
         )}
@@ -253,12 +326,22 @@ export default function CarouselEditorPage({ params }: PageProps) {
         {/* Right side: toolbar + preview */}
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
           {/* Toolbar */}
-          <div className="h-11 border-b border-border bg-surface flex items-center px-4 gap-3 shrink-0">
-            <AspectRatioSelector
+          <div className="h-11 border-b border-border bg-surface flex items-center px-4 gap-2 shrink-0 overflow-x-auto">
+            <SizeSelector
               value={carousel.aspectRatio}
               onChange={handleAspectChange}
             />
             <div className="flex-1" />
+            <Button
+              variant={showThemePanel ? "outline" : "ghost"}
+              size="sm"
+              onClick={() => setShowThemePanel(!showThemePanel)}
+              className={showThemePanel ? "border-accent text-accent" : "text-muted-foreground"}
+              aria-label="Themes"
+              title="Theme gallery"
+            >
+              <Palette className="h-3.5 w-3.5" />
+            </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -275,7 +358,7 @@ export default function CarouselEditorPage({ params }: PageProps) {
               onClick={() => setShowSafeZones(!showSafeZones)}
               className={showSafeZones ? "border-accent text-accent" : "text-muted-foreground"}
               aria-label="Toggle safe zones"
-              title="Instagram safe zones"
+              title="Safe zones"
             >
               <Grid3X3 className="h-3.5 w-3.5" />
             </Button>
@@ -294,6 +377,26 @@ export default function CarouselEditorPage({ params }: PageProps) {
               title="Save as template"
             >
               <Bookmark className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowLicense(true)}
+              className="text-muted-foreground"
+              aria-label="License"
+              title="Remove watermark"
+            >
+              <Lock className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowLlmConfig(true)}
+              className="text-muted-foreground"
+              aria-label="LLM settings"
+              title="LLM configuration"
+            >
+              <Settings className="h-3.5 w-3.5" />
             </Button>
             <Button
               variant="ghost"

@@ -113,7 +113,7 @@ export function ExportButton({ carouselId, slideCount }: ExportButtonProps) {
         ) : (
           <>
             <Download className="h-4 w-4" />
-            <span>Export PNG</span>
+            <span>Export</span>
           </>
         )}
       </span>

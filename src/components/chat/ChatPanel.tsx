@@ -20,6 +20,7 @@ interface ChatPanelProps {
   onStreamStart?: () => void;
   onStreamEnd?: () => void;
   chatInputRef?: React.RefObject<HTMLTextAreaElement | null>;
+  themeId?: string | null;
 }
 
 export function ChatPanel({
@@ -29,6 +30,7 @@ export function ChatPanel({
   onStreamStart,
   onStreamEnd,
   chatInputRef,
+  themeId,
 }: ChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -111,6 +113,7 @@ export function ChatPanel({
             message,
             sessionId,
             carouselId,
+            themeId,
           }),
           signal: abortRef.current.signal,
         });
@@ -225,24 +228,17 @@ export function ChatPanel({
         onStreamEnd?.();
       }
     },
-    [isStreaming, sessionId, carouselId, onStreamStart, onStreamEnd, persistMessages]
+    [isStreaming, sessionId, carouselId, themeId, onStreamStart, onStreamEnd, persistMessages]
   );
 
   if (!claudeAvailable) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 text-center">
         <Plug className="h-10 w-10 text-muted-foreground mb-3" />
-        <h3 className="font-semibold text-sm mb-1">Connect Claude CLI</h3>
-        <p className="text-xs text-muted-foreground max-w-[200px]">
-          Install Claude CLI to enable AI-powered carousel creation.{" "}
-          <a
-            href="https://docs.anthropic.com/en/docs/claude-code"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-accent underline"
-          >
-            Install guide
-          </a>
+        <h3 className="font-semibold text-sm mb-1">No LLM Configured</h3>
+        <p className="text-xs text-muted-foreground max-w-[220px]">
+          Open Settings (gear icon) to enter a base URL + API key (free Groq or
+          Google tier works), or install a coding CLI like Antigravity.
         </p>
       </div>
     );

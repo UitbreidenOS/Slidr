@@ -113,9 +113,9 @@ export default function DashboardPage() {
         <div className="max-w-5xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold">Open Carrusel</h1>
+              <h1 className="text-2xl font-bold">Slidr</h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Create Instagram carousels with AI
+                Create LinkedIn, Instagram & TikTok carousels with AI
               </p>
             </div>
             <Button onClick={() => setShowCreateDialog(true)} variant="accent">
@@ -166,8 +166,8 @@ export default function DashboardPage() {
                 No carousels yet
               </h2>
               <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-                Create your first Instagram carousel. Our AI assistant will
-                help you design beautiful slides in seconds.
+                Create your first carousel for LinkedIn, Instagram, or TikTok.
+                Our AI assistant will help you design beautiful slides in seconds.
               </p>
               <Button onClick={() => setShowCreateDialog(true)} variant="accent" size="lg">
                 <Plus className="h-5 w-5" />

@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Open Carrusel — AI Carousel Builder",
+  title: "Slidr — AI Carousel Maker for LinkedIn, Instagram & TikTok",
   description:
-    "Open-source AI-powered Instagram carousel builder. Create beautiful carousels with natural language.",
+    "CLI-agnostic AI carousel maker. BYOK or use any coding CLI (Antigravity, Claude Code, Codex). 15 themes, multi-platform sizing, watermark + $11 lifetime unlock.",
 };
 
 export default function RootLayout({
