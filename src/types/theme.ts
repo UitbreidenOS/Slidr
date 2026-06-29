@@ -10,6 +10,10 @@ export type ThemeCategory =
   | "Brand-Inspired"
   | "Niche & Industry"
   | "Depth & Layering"
+  | "3D & Glassmorphism"
+  | "Cinematic & Gradient"
+  | "Premium Dark"
+  | "3D Typography"
   | "General";
 
 export interface ThemePalette {

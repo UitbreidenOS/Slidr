@@ -27,6 +27,10 @@ export function parseDesignMd(id: string, content: string): Theme {
     "Brand-Inspired",
     "Niche & Industry",
     "Depth & Layering",
+    "3D & Glassmorphism",
+    "Cinematic & Gradient",
+    "Premium Dark",
+    "3D Typography",
     "General",
   ];
   const category = (validCategories.includes(categoryStr)
@@ -34,8 +38,12 @@ export function parseDesignMd(id: string, content: string): Theme {
     : "General") as ThemeCategory;
 
   // Atmosphere = the first `>` line that is NOT "Category:" or "Depth Layering:"
-  const atmosphereMatch = content.match(/^>\s*(?!Category:|Depth Layering:)(.+)$/m);
-  const atmosphere = atmosphereMatch ? atmosphereMatch[1].trim() : "";
+  const atmosphereLine = content.split("\n").find(
+    (line) => /^>\s*(?!Category:|Depth Layering:)(.+)$/.test(line)
+  );
+  const atmosphere = atmosphereLine
+    ? atmosphereLine.replace(/^>\s*/, "").trim()
+    : "";
 
   const sourceMatch = content.match(/Source inspiration:\s*(.+)$/m);
   const sourceInspiration = sourceMatch ? sourceMatch[1].trim() : undefined;
