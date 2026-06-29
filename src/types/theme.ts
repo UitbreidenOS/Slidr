@@ -4,6 +4,12 @@ export type ThemeCategory =
   | "GPT Image"
   | "Beauty"
   | "Agentic"
+  | "Dark & Neon"
+  | "Editorial & Magazine"
+  | "Brutalist & Y2K"
+  | "Brand-Inspired"
+  | "Niche & Industry"
+  | "Depth & Layering"
   | "General";
 
 export interface ThemePalette {
@@ -45,4 +51,10 @@ export interface Theme {
   motion: ThemeMotion;
   designRules: string[];
   sourceInspiration?: string;
+  /**
+   * When true, the theme supports the text-behind-subject depth-layering
+   * effect: large headline text is rendered BEHIND the subject using
+   * z-index layering, creating 3D depth (the 2026 viral carousel trend).
+   */
+  depthLayering?: boolean;
 }

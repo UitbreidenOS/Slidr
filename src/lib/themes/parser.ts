@@ -15,7 +15,21 @@ export function parseDesignMd(id: string, content: string): Theme {
 
   const categoryMatch = content.match(/Category:\s*(.+)$/m);
   const categoryStr = categoryMatch ? categoryMatch[1].trim() : "General";
-  const category = (["Claude AI", "Student Perks", "GPT Image", "Beauty", "Agentic", "General"].includes(categoryStr)
+  const validCategories = [
+    "Claude AI",
+    "Student Perks",
+    "GPT Image",
+    "Beauty",
+    "Agentic",
+    "Dark & Neon",
+    "Editorial & Magazine",
+    "Brutalist & Y2K",
+    "Brand-Inspired",
+    "Niche & Industry",
+    "Depth & Layering",
+    "General",
+  ];
+  const category = (validCategories.includes(categoryStr)
     ? categoryStr
     : "General") as ThemeCategory;
 
@@ -24,6 +38,14 @@ export function parseDesignMd(id: string, content: string): Theme {
 
   const sourceMatch = content.match(/Source inspiration:\s*(.+)$/m);
   const sourceInspiration = sourceMatch ? sourceMatch[1].trim() : undefined;
+
+  // Parse "Depth Layering: enabled" from front-matter (the area after the
+  // H1 and the Category line, where ">" blockquote directives live).
+  // Matches `> Depth Layering: enabled` (case-insensitive, optional whitespace).
+  const depthLayeringMatch = content.match(/^>\s*Depth Layering:\s*([^\n]+)$/im);
+  const depthLayering = depthLayeringMatch
+    ? /enabled|true|yes|on/i.test(depthLayeringMatch[1].trim())
+    : false;
 
   // Parse hex colors — primary, secondary, accent, background, surface, text
   const palette = parsePalette(content);
@@ -51,6 +73,7 @@ export function parseDesignMd(id: string, content: string): Theme {
     motion,
     designRules,
     sourceInspiration,
+    depthLayering,
   };
 }
 

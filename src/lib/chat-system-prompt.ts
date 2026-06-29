@@ -41,11 +41,30 @@ ${carousel.slides.length > 0 ? carousel.slides.map((s) => `  - Slide ${s.order +
 ${(carousel.referenceImages?.length ?? 0) > 0 ? `\n## Reference images (use Read to view these)\n${carousel.referenceImages.map((r) => `- "${r.name}" → ${r.absPath}`).join("\n")}` : ""}`
     : "";
 
+  const depthLayeringSection = theme?.depthLayering
+    ? `### DEPTH LAYERING (text-behind-subject) ENABLED
+This theme uses the 2026 viral depth-layering effect. You MUST follow these rules for every slide:
+
+- Place large headline text BEHIND the subject using z-index layering
+- The subject (person/product) appears ON TOP, with text visible around it
+- Use this CSS pattern:
+  .headline { position: relative; z-index: 1; }
+  .subject { position: relative; z-index: 2; }
+- Text should extend BEYOND the subject on both sides (2-3x wider)
+- Background \u2192 Text \u2192 Subject (z-index order: 0 \u2192 1 \u2192 2)
+- The effect creates cognitive friction: viewers pause to "complete" hidden letters
+- Keep contrast > 4.5:1 between text and background so the hidden portions remain legible
+- Subject should be a transparent-background PNG/WebP cutout (or a CSS clip-path shape) so text reads through cleanly
+- Headlines should be 96-160px on the hook slide; body slides use 64-96px
+- Vary which letters are occluded across slides for visual rhythm
+
+`
+    : "";
+
   const themeSection = theme
     ? `## Active theme: "${theme.name}" (${theme.category})
 Atmosphere: ${theme.atmosphere}
-
-### Color palette
+${depthLayeringSection}### Color palette
 - Background: ${theme.palette.background}
 - Primary: ${theme.palette.primary}
 - Secondary: ${theme.palette.secondary}
