@@ -8,6 +8,7 @@ import { spawnCli } from "./cli-spawner";
 import { spawnAntigravity } from "@/lib/antigravity";
 import { SLIDE_TOOLS } from "./tools";
 import { addSlide, updateSlide, deleteSlide, updateCarousel, getCarousel } from "@/lib/carousels";
+import OpenAI from "openai";
 
 const CONFIG_FILE = "llm-config.json";
 
@@ -82,6 +83,37 @@ export async function executeToolCall(
           };
         } catch (err) {
           return { success: false, message: `Fetch failed: ${(err as Error).message}` };
+        }
+      }
+      case "generate_image": {
+        const prompt = args.prompt as string;
+        if (!prompt) return { success: false, message: "Missing prompt" };
+        try {
+          const config = await getLlmConfig();
+          if (!config.apiKey) {
+            return { success: false, message: "Image generation requires an API key in settings." };
+          }
+          const openai = new OpenAI({
+            apiKey: config.apiKey,
+            baseURL: config.baseURL || "https://api.openai.com/v1",
+          });
+          const response = await openai.images.generate({
+            model: "dall-e-3",
+            prompt,
+            n: 1,
+            size: "1024x1024",
+            response_format: "url",
+          });
+          const url = response.data?.[0]?.url;
+          if (!url) throw new Error("No image generated.");
+          
+          return {
+            success: true,
+            message: `Generated image for prompt: ${prompt}`,
+            data: { url },
+          };
+        } catch (err) {
+          return { success: false, message: `Image generation failed: ${(err as Error).message}` };
         }
       }
       default:

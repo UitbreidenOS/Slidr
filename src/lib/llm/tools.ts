@@ -89,4 +89,18 @@ export const SLIDE_TOOLS: LlmTool[] = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "generate_image",
+      description: "Generate an image for a slide background, icon, or illustration using DALL-E. Returns the URL of the generated image which can be used in slide HTML (<img src='...' /> or background-image).",
+      parameters: {
+        type: "object",
+        properties: {
+          prompt: { type: "string", description: "Detailed description of the image to generate." },
+        },
+        required: ["prompt"],
+      },
+    },
+  },
 ];
