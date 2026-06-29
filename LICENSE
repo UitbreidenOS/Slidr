@@ -1,21 +1,40 @@
-MIT License
+# Slidr — Dual License
 
-Copyright (c) 2026 Slidr Contributors, tushar2704 <tushar.inseec@gmail.com>
+Copyright © 2026 Tushar Aggarwal · [Uitbreiden](https://uitbreiden.com/)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Slidr is dual-licensed depending on the file type. This split keeps the design assets and presets freely shareable while ensuring the core system, CLI spawner, and slide generator executable code remain open over the network.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+---
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Code — GNU Affero General Public License v3.0
+
+The full text of the AGPL-3.0 license is in [LICENSE-CODE](LICENSE-CODE).
+
+**What's covered:** all executable source code in this repository, including:
+
+- Next.js application routes, layouts, and pages under `src/app/`
+- React components under `src/components/`
+- Shared utilities, LLM adapters, CLI spawners, and libraries under `src/lib/`
+- Setup, diagnostics, and environment tools under `scripts/`
+- Slash commands configurations under `.claude/`
+- Any build, development, or deployment configs
+
+**What this means in plain English:**
+
+- You may use, modify, and distribute the code freely.
+- If you modify the code and run it as a network service (e.g. host a custom fork of Slidr online), you must make your modified source available to the users of that service.
+- Derivative works must be released under AGPL-3.0 or a compatible license.
+
+If you need a different licensing arrangement for commercial use, contact [ceo@uitbreiden.com](mailto:ceo@uitbreiden.com).
+
+---
+
+## Content & Design Presets — Creative Commons Attribution-ShareAlike 4.0
+
+The full text of the CC-BY-SA-4.0 license is in [LICENSE-CONTENT](LICENSE-CONTENT).
+
+**What's covered:** all Markdown design files and preset configurations in this repository, including:
+
+- Theme presets (`src/lib/themes/presets/*.md`)
+- Custom design specifications (`DESIGN.md` format specs)
+- Documentation and local metadata files (`AGENTS.md`, `CLAUDE.md`, `README.md`)
