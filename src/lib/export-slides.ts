@@ -15,6 +15,39 @@ let browser: Browser | null = null;
 let exportCount = 0;
 const MAX_EXPORTS_BEFORE_RESTART = 50;
 
+/**
+ * Find a usable Chrome executable.
+ * Prefers Puppeteer's bundled download, falls back to system Chrome/Chromium.
+ */
+function getChromeExecutablePath(): string | undefined {
+  // Check common system Chrome locations (macOS, Linux, Windows)
+  const candidates = [
+    // macOS
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    // Linux
+    "/usr/bin/google-chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+    // Windows
+    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+  ];
+
+  for (const candidate of candidates) {
+    try {
+      const { existsSync } = require("fs");
+      if (existsSync(candidate)) return candidate;
+    } catch {
+      // ignore
+    }
+  }
+
+  // Let Puppeteer use its own bundled download if no system Chrome found
+  return undefined;
+}
+
 async function getBrowser(): Promise<Browser> {
   if (browser && exportCount >= MAX_EXPORTS_BEFORE_RESTART) {
     await browser.close().catch(() => {});
@@ -22,8 +55,11 @@ async function getBrowser(): Promise<Browser> {
     exportCount = 0;
   }
   if (!browser || !browser.isConnected()) {
+    // Prefer system Chrome if Puppeteer's bundled download is missing/corrupt
+    const executablePath = getChromeExecutablePath();
     browser = await puppeteer.launch({
       headless: true,
+      executablePath,
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"],
     });
     exportCount = 0;
