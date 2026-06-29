@@ -1,7 +1,7 @@
 "use client";
 
 import { TopBar } from "@/components/layout/TopBar";
-import { Calendar as CalendarIcon, Clock, Share2, Instagram, Linkedin, CheckCircle2 } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Share2, Camera, BookOpen, CheckCircle2 } from "lucide-react";
 
 export default function CalendarPage() {
   // Mock data for the calendar UI
@@ -13,7 +13,7 @@ export default function CalendarPage() {
       platform: "LinkedIn",
       title: "5 Tips for Remote Work (PDF Carousel)",
       status: "Scheduled",
-      icon: <Linkedin className="h-4 w-4 text-blue-600" />,
+      icon: <BookOpen className="h-4 w-4 text-blue-600" />,
     },
     {
       id: "2",
@@ -22,7 +22,7 @@ export default function CalendarPage() {
       platform: "Instagram",
       title: "UI Design Trends 2026",
       status: "Scheduled",
-      icon: <Instagram className="h-4 w-4 text-pink-600" />,
+      icon: <Camera className="h-4 w-4 text-pink-600" />,
     },
     {
       id: "3",
