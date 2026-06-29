@@ -2,12 +2,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Layers, Calendar, SlidersHorizontal, Trash2, Copy } from "lucide-react";
+import { Plus, Layers, Calendar, SlidersHorizontal, Trash2, Copy, Zap } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { CreateCarouselDialog } from "@/components/ui/create-carousel-dialog";
+import { CreateFromSourceDialog } from "@/components/ui/create-from-source-dialog";
 import { BrandSetup } from "@/components/brand/BrandSetup";
 import { SlideRenderer } from "@/components/editor/SlideRenderer";
 import { TemplateGallery } from "@/components/templates/TemplateGallery";
@@ -60,6 +61,7 @@ export default function DashboardPage() {
   }, []);
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showCreateFromSourceDialog, setShowCreateFromSourceDialog] = useState(false);
   const [activeTab, setActiveTab] = useState<"carousels" | "templates">("carousels");
 
   const handleCreate = useCallback(async (name: string, aspectRatio: string) => {
@@ -97,6 +99,12 @@ export default function DashboardPage() {
         onCreate={handleCreate}
       />
 
+      <CreateFromSourceDialog
+        open={showCreateFromSourceDialog}
+        onOpenChange={setShowCreateFromSourceDialog}
+        onSuccess={(id) => router.push(`/carousel/${id}`)}
+      />
+
       <BrandSetup
         open={showBrandSetup}
         onComplete={() => {
@@ -118,10 +126,16 @@ export default function DashboardPage() {
                 Create LinkedIn, Instagram & TikTok carousels with AI
               </p>
             </div>
-            <Button onClick={() => setShowCreateDialog(true)} variant="accent">
-              <Plus className="h-4 w-4" />
-              New Carousel
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setShowCreateFromSourceDialog(true)} variant="outline">
+                <Zap className="h-4 w-4 mr-1 text-accent" />
+                Generate from Source
+              </Button>
+              <Button onClick={() => setShowCreateDialog(true)} variant="accent">
+                <Plus className="h-4 w-4 mr-1" />
+                New Carousel
+              </Button>
+            </div>
           </div>
 
           {/* Tabs */}

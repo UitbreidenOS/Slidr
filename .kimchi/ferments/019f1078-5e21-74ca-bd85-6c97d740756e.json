@@ -1,0 +1,257 @@
+{
+  "id": "019f1078-5e21-74ca-bd85-6c97d740756e",
+  "name": "Match open-carrusel UI + theme editor",
+  "description": "Make better version od this https://github.com/Hainrixz/open-carrusel   and use internaldev.md to develop and",
+  "status": "paused",
+  "worktree": {
+    "path": "/Users/tushar/Desktop/Slidr",
+    "branch": "main",
+    "commit": "33805f135f4ea2a68fbd752411cdaaa24ae94baa"
+  },
+  "scoping": {
+    "goal": {
+      "answer": "Align Slidr's dashboard and editor UI to match open-carrusel's screenshots exactly (light theme, coral accent, 3-panel editor layout), and add an Open Design-style visual theme editor that lets users edit palette/fonts/spacing live and persist custom themes alongside the 15 presets.",
+      "confirmedAt": "2026-06-28T23:38:41.631Z"
+    },
+    "criteria": {
+      "answer": "App chrome tokens match open-carrusel exactly: globals.css --background:#fafafa, --surface:#ffffff, --accent:#e94560, --border:#e5e5e5 — verified by grep of globals.css\nDashboard layout matches open-carrusel screenshot: header + 'My Carousels'/'Templates' tabs + 3-col card grid (thumbnail, name, aspect-ratio badge, date, hover duplicate/delete) — verified by manual visual check\nEditor layout matches open-carrusel screenshot: 3-panel (chat left w-80 / preview center / filmstrip bottom) + top toolbar with aspect selector + actions — verified by manual visual check\nVisual theme editor opens from the editor: 5 color pickers (primary/secondary/accent/background/surface), heading+body font dropdowns, spacing scale; preview iframe updates live on change — verified by editing a field and observing instant preview update\nCustom themes persist: 'Save as custom theme' writes to /data/custom-themes.json and survives reload — verified by saving, reloading, and re-checking the theme gallery\nCustom themes appear in ThemeGallery alongside the 15 presets, with edit + delete controls — verified by saving a theme and confirming it shows in the gallery with controls\nnpm run build exits 0 with zero TypeScript errors — verified by build command\nnpm run doctor passes all required checks — verified by doctor command",
+      "confirmedAt": "2026-06-28T23:38:41.631Z"
+    },
+    "constraints": {
+      "answer": "UI tokens must match open-carrusel's globals.css exactly (#fafafa bg / #ffffff surface / #e94560 coral accent / #e5e5e5 border) — no custom dark/violet theme in app chrome, Preserve all existing functionality: 15 preset themes, dual-mode LLM adapter, watermark, license, PDF+PNG export — UI revamp must not regress features, Custom themes reuse the existing Theme type (src/types/theme.ts) and parser/serializer so presets and custom themes render identically, No new heavy dependencies — reuse existing ColorPicker/FontSelector components from src/components/brand/ where possible, Theme editor is the ONLY Open Design-style feature in scope; design-system import, per-slide sliders, and clone-from-carousel are explicitly out (roadmap), internaldev.md remains the source of truth for overall project direction — this ferment implements the UI parity + customization pivot",
+      "confirmedAt": "2026-06-28T23:38:41.631Z"
+    },
+    "phases": {
+      "answer": "UI alignment to open-carrusel, Visual theme editor + custom-theme CRUD",
+      "confirmedAt": "2026-06-28T23:38:41.631Z"
+    },
+    "assumptions": {
+      "answer": "This ferment = UI revamp + visual theme editor only. 'Proceed to next phase' / deployment / post-launch roadmap (AI image gen, video, design-system import, per-slide sliders, clone-from-carousel) is separate future work, not part of this scope. The 15 preset themes (DESIGN.md files) are kept as-is and read-only; only custom themes are user-editable. The visual theme editor edits the carousel's active theme instance live (a working copy), and 'Save as custom theme' persists it to /data/custom-themes.json. Custom themes are stored as JSON (not .md files) to keep them editable, but are normalized to the same Theme type via the existing parser path so preview/export treat them identically. Slidr keeps its name + watermark branding even though the app chrome adopts open-carrusel's exact tokens. The Midnight Neon dark theme I added in Phase E is reverted (the --slidr-violet/--slidr-cyan vars removed) in favor of the open-carrusel light tokens; Midnight Neon remains as one of the 15 preset themes users can apply to their carousel content, but the app UI itself is light. Existing components already use Tailwind theme tokens (bg-background, text-foreground, bg-accent etc.) so reverting tokens propagates automatically without per-component edits.",
+      "confirmedAt": "2026-06-28T23:38:41.631Z"
+    }
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "index": 1,
+      "name": "UI alignment to open-carrusel",
+      "goal": "Revert Slidr's app chrome to open-carrusel's exact light theme tokens and verify the dashboard + editor layouts already match the screenshots (they were inherited from open-carrusel); fix any component-level dark-theme deviations.",
+      "description": "Foundation phase: the visual theme editor (Phase 2) builds on a UI that already matches open-carrusel, so align tokens first. Most layout structure is already inherited from open-carrusel — this phase is primarily a token revert + targeted component fixes.",
+      "constraints": [
+        "Match open-carrusel globals.css tokens exactly",
+        "Do not regress the 15 themes, LLM adapter, watermark, license, or export"
+      ],
+      "budget": "60k tokens",
+      "parallel": false,
+      "status": "active",
+      "steps": [
+        {
+          "id": "step-1",
+          "index": 1,
+          "description": "Revert src/app/globals.css :root tokens to open-carrusel exact values (--background:#fafafa, --foreground:#171717, --muted:#f5f5f5, --muted-foreground:#737373, --border:#e5e5e5, --ring:#1a1a2e, --accent:#e94560, --accent-foreground:#ffffff, --surface:#ffffff, --destructive:#ef4444). Remove the --slidr-violet/--slidr-cyan/--slidr-indigo/--slidr-midnight custom vars I added in Phase E. Keep the .slidr-press utility (harmless alias of oc-press). Keep all motion keyframes unchanged.",
+          "status": "verified",
+          "verification": {
+            "command": "grep -q '#fafafa' src/app/globals.css && grep -q '#e94560' src/app/globals.css && ! grep -q '#0a0a0f' src/app/globals.css",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false,
+          "startedAt": "2026-06-28T23:40:53.266Z",
+          "completedAt": "2026-06-28T23:53:12.467Z",
+          "result": {
+            "success": true,
+            "exitCode": 0,
+            "stdout": "",
+            "stderr": "",
+            "completedAt": "2026-06-28T23:53:12.467Z"
+          }
+        },
+        {
+          "id": "step-2",
+          "index": 2,
+          "description": "Audit src/components/ and src/app/ for any hardcoded dark-theme colors (#0a0a0f, #16161f, #a78bfa, #22d3ee, violet, midnight) that bypass the token system. Fix any found to use token classes (bg-background, bg-surface, text-foreground, bg-accent, border-border). Expected low count since components already use tokens.",
+          "status": "verified",
+          "verification": {
+            "command": "! grep -rnE '#0a0a0f|#16161f|#a78bfa' src/components src/app 2>/dev/null | grep -v node_modules",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false,
+          "startedAt": "2026-06-28T23:58:26.351Z",
+          "completedAt": "2026-06-29T00:06:55.687Z",
+          "result": {
+            "success": true,
+            "exitCode": 0,
+            "stdout": "",
+            "stderr": "",
+            "completedAt": "2026-06-29T00:06:55.687Z"
+          }
+        },
+        {
+          "id": "step-3",
+          "index": 3,
+          "description": "Verify dashboard (src/app/page.tsx) layout matches open-carrusel screenshot: header with 'Slidr' title + 'New Carousel' button, 'My Carousels'/'Templates' tabs, 3-col card grid with thumbnail/aspect-badge/date/hover-actions. Already inherited from open-carrusel — confirm no regressions from Phase E rebrand edits.",
+          "status": "pending",
+          "verification": {
+            "command": "grep -q 'My Carousels' src/app/page.tsx && grep -q 'Templates' src/app/page.tsx",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false,
+          "startedAt": "2026-06-29T00:47:00.899Z"
+        },
+        {
+          "id": "step-4",
+          "index": 4,
+          "description": "Verify editor (src/app/carousel/[id]/page.tsx) layout matches open-carrusel screenshot: 3-panel (chat left w-80 / preview center / filmstrip bottom) + top toolbar. Already inherited — confirm the ThemeGallery/SizeSelector/LlmConfigModal additions from Phase B don't break the layout.",
+          "status": "pending",
+          "verification": {
+            "command": "grep -q 'border-r border-border' src/app/carousel/[id]/page.tsx && grep -q 'SlideFilmstrip' src/app/carousel/[id]/page.tsx",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        },
+        {
+          "id": "step-5",
+          "index": 5,
+          "description": "Run npm run build (zero TS errors) and npm run doctor (all required checks pass) as the gate for this phase.",
+          "status": "pending",
+          "verification": {
+            "command": "npm run build 2>&1 | grep -qiE 'error|cannot' && return 1 || npm run build 2>&1 | tail -3",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        }
+      ],
+      "startedAt": "2026-06-28T23:39:03.011Z"
+    },
+    {
+      "id": "phase-2",
+      "index": 2,
+      "name": "Visual theme editor + custom-theme CRUD",
+      "goal": "Add an Open Design-style visual theme editor: live palette/font/spacing editing on the carousel's active theme, with 'Save as custom theme' persisting to /data/custom-themes.json and custom themes appearing in the ThemeGallery with edit/delete controls.",
+      "description": "Builds on Phase 1's aligned UI. Adds the customization layer. Custom themes are JSON (editable) normalized to the existing Theme type so preview/export treat them identically to presets.",
+      "constraints": [
+        "Custom themes reuse the existing Theme type and serializer",
+        "No new heavy deps — reuse ColorPicker/FontSelector from src/components/brand/",
+        "Design-system import, per-slide sliders, clone-from-carousel are out of scope (roadmap)"
+      ],
+      "budget": "120k tokens",
+      "parallel": false,
+      "status": "planned",
+      "steps": [
+        {
+          "id": "step-1",
+          "index": 1,
+          "description": "Add custom-theme storage layer: src/lib/themes/custom-store.ts with listCustomThemes(), getCustomTheme(id), saveCustomTheme(theme), deleteCustomTheme(id) — mirroring the pattern in src/lib/style-presets.ts (readDataSafe/writeData to /data/custom-themes.json). Update src/lib/themes/index.ts to export these + a unified listAllThemes() that merges presets + custom.",
+          "status": "pending",
+          "verification": {
+            "command": "ls src/lib/themes/custom-store.ts && grep -q 'listCustomThemes\\|saveCustomTheme' src/lib/themes/custom-store.ts",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        },
+        {
+          "id": "step-2",
+          "index": 2,
+          "description": "Add API routes src/app/api/themes/custom/route.ts (GET list, POST create) and src/app/api/themes/custom/[id]/route.ts (PUT update, DELETE). Reuse the existing /api/themes GET to include custom themes in its response so the gallery fetches one merged list.",
+          "status": "pending",
+          "verification": {
+            "command": "ls src/app/api/themes/custom/route.ts 'src/app/api/themes/custom/[id]/route.ts'",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        },
+        {
+          "id": "step-3",
+          "index": 3,
+          "description": "Build src/components/themes/ThemeEditor.tsx modal: 5 color pickers (reuse ColorPicker from src/components/brand/ColorPicker.tsx) for primary/secondary/accent/background/surface, 2 font dropdowns (reuse FontSelector from src/components/brand/FontSelector.tsx) for heading/body, spacing scale input. Props: theme (working copy), onChange (live update), onSave, onDelete. Live preview updates the carousel's themeId-bound theme object in real time.",
+          "status": "pending",
+          "verification": {
+            "command": "ls src/components/themes/ThemeEditor.tsx && grep -q 'ColorPicker\\|FontSelector' src/components/themes/ThemeEditor.tsx",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        },
+        {
+          "id": "step-4",
+          "index": 4,
+          "description": "Update src/components/themes/ThemeGallery.tsx to (a) fetch merged presets+custom via /api/themes, (b) show custom themes in a separate 'Custom' section with edit (opens ThemeEditor) + delete buttons, (c) add an 'Edit theme' button on the currently-selected theme and a 'New custom theme' button at top.",
+          "status": "pending",
+          "verification": {
+            "command": "grep -q 'custom' src/components/themes/ThemeGallery.tsx && grep -q 'ThemeEditor' src/components/themes/ThemeGallery.tsx",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        },
+        {
+          "id": "step-5",
+          "index": 5,
+          "description": "Wire ThemeEditor into the editor page (src/app/carousel/[id]/page.tsx): add state for showThemeEditor + editingTheme; when user edits, update a local working-copy theme that overrides the carousel's themeId for preview (pass to ChatPanel/CarouselPreview); on 'Save as custom theme', POST to /api/themes/custom and set carousel.themeId to the new custom id via PUT /api/carousels/[id].",
+          "status": "pending",
+          "verification": {
+            "command": "grep -q 'ThemeEditor' src/app/carousel/[id]/page.tsx && grep -q 'showThemeEditor' src/app/carousel/[id]/page.tsx",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        },
+        {
+          "id": "step-6",
+          "index": 6,
+          "description": "Update src/lib/chat-system-prompt.ts to accept a resolved Theme object (preset OR custom) instead of only looking up by themeId — so custom themes inject their palette/fonts into the LLM prompt identically to presets.",
+          "status": "pending",
+          "verification": {
+            "command": "grep -q 'theme' src/lib/chat-system-prompt.ts",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        },
+        {
+          "id": "step-7",
+          "index": 7,
+          "description": "Run npm run build (zero TS errors) + npm run doctor (all required checks pass) + manual verification: open editor, pick a theme, open ThemeEditor, change accent color, confirm preview updates live, save as custom theme, reload, confirm custom theme persists in gallery.",
+          "status": "pending",
+          "verification": {
+            "command": "npm run build 2>&1 | grep -qiE 'error|cannot' && return 1 || npm run build 2>&1 | tail -3",
+            "retries": 2,
+            "retryDelayMs": 1000
+          },
+          "parallel": false
+        }
+      ]
+    }
+  ],
+  "decisions": [],
+  "memories": [],
+  "createdAt": "2026-06-28T23:02:31.713Z",
+  "updatedAt": "2026-06-29T00:49:12.870Z",
+  "goal": "Align Slidr's dashboard and editor UI to match open-carrusel's screenshots exactly (light theme, coral accent, 3-panel editor layout), and add an Open Design-style visual theme editor that lets users edit palette/fonts/spacing live and persist custom themes alongside the 15 presets.",
+  "successCriteria": [
+    "App chrome tokens match open-carrusel exactly: globals.css --background:#fafafa, --surface:#ffffff, --accent:#e94560, --border:#e5e5e5 — verified by grep of globals.css",
+    "Dashboard layout matches open-carrusel screenshot: header + 'My Carousels'/'Templates' tabs + 3-col card grid (thumbnail, name, aspect-ratio badge, date, hover duplicate/delete) — verified by manual visual check",
+    "Editor layout matches open-carrusel screenshot: 3-panel (chat left w-80 / preview center / filmstrip bottom) + top toolbar with aspect selector + actions — verified by manual visual check",
+    "Visual theme editor opens from the editor: 5 color pickers (primary/secondary/accent/background/surface), heading+body font dropdowns, spacing scale; preview iframe updates live on change — verified by editing a field and observing instant preview update",
+    "Custom themes persist: 'Save as custom theme' writes to /data/custom-themes.json and survives reload — verified by saving, reloading, and re-checking the theme gallery",
+    "Custom themes appear in ThemeGallery alongside the 15 presets, with edit + delete controls — verified by saving a theme and confirming it shows in the gallery with controls",
+    "npm run build exits 0 with zero TypeScript errors — verified by build command",
+    "npm run doctor passes all required checks — verified by doctor command"
+  ],
+  "constraints": [
+    "UI tokens must match open-carrusel's globals.css exactly (#fafafa bg / #ffffff surface / #e94560 coral accent / #e5e5e5 border) — no custom dark/violet theme in app chrome",
+    "Preserve all existing functionality: 15 preset themes, dual-mode LLM adapter, watermark, license, PDF+PNG export — UI revamp must not regress features",
+    "Custom themes reuse the existing Theme type (src/types/theme.ts) and parser/serializer so presets and custom themes render identically",
+    "No new heavy dependencies — reuse existing ColorPicker/FontSelector components from src/components/brand/ where possible",
+    "Theme editor is the ONLY Open Design-style feature in scope; design-system import, per-slide sliders, and clone-from-carousel are explicitly out (roadmap)",
+    "internaldev.md remains the source of truth for overall project direction — this ferment implements the UI parity + customization pivot"
+  ],
+  "lastActiveAt": "2026-06-28T23:39:03.011Z",
+  "activePhaseId": "phase-1"
+}
