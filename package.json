@@ -1,7 +1,7 @@
 {
   "name": "slidr",
-  "version": "1.0.0",
-  "description": "Slidr — CLI-agnostic AI carousel maker for LinkedIn, Instagram & TikTok. BYOK or use any coding CLI (Antigravity, Claude Code, Codex). 15 themes, multi-platform sizing, watermark + $11 lifetime unlock.",
+  "version": "1.1.0",
+  "description": "Slidr — CLI-agnostic AI carousel maker for LinkedIn, Instagram & TikTok. BYOK or use any coding CLI (Antigravity, Claude Code, Codex). 115 themes, multi-platform sizing, watermark + $11 lifetime unlock.",
   "license": "MIT",
   "private": true,
   "engines": {
@@ -9,13 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tushar2704/Slidr"
+    "url": "https://github.com/UitbreidenOS/Slidr"
   },
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "stop": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true",
     "lint": "eslint",
     "doctor": "node scripts/doctor.mjs"
   },

@@ -1,7 +1,7 @@
 # Slidr
 
 > **CLI-agnostic AI carousel maker for LinkedIn, Instagram & TikTok.**
-> Bring your own LLM (any OpenAI-compatible base URL + API key) or use a coding CLI (Antigravity recommended). 15+ curated themes, 8 platform sizes, non-removable watermark, $11 lifetime unlock.
+> Bring your own LLM (any OpenAI-compatible base URL + API key) or use a coding CLI (Antigravity recommended). 115+ curated themes, 8 platform sizes, non-removable watermark, $11 lifetime unlock.
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org)
 [![React 19](https://img.shields.io/badge/React-19-blue)](https://react.dev)
