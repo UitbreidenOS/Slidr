@@ -7,7 +7,17 @@
 [![React 19](https://img.shields.io/badge/React-19-blue)](https://react.dev)
 [![TypeScript 5](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org)
 [![Tailwind v4](https://img.shields.io/badge/Tailwind-v4-38bdf8)](https://tailwindcss.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
+[![License: Dual AGPL/CC](https://img.shields.io/badge/License-Dual_AGPL_/_CC-orange)](./LICENSE)
+
+---
+
+## About Slidr 🚀
+
+Slidr is the ultimate open-source visual content engine designed specifically for modern creators, developers, and social media professionals. Operating locally-first and respecting design portability, Slidr eliminates the dependency on bloated cloud platforms and vendor lock-in.
+
+*   **Design Freedom**: Write, adjust, and distribute layouts using a highly readable, human-editable, and LLM-friendly `DESIGN.md` specification.
+*   **Dual LLM Engine**: Toggle seamlessly between low-overhead direct API mode (HTTP) and advanced, agent-powered context extraction (CLI integration via `agy`, `claude`, `codex`).
+*   **Viral Aesthetics**: Out-of-the-box configuration files for depth-layering (text-behind-subject) effects, high contrast dark layouts, and professional editorial spacing systems.
 
 ---
 
@@ -496,13 +506,10 @@ See [`internaldev.md`](./internaldev.md) for the full architecture spec.
 
 ## License & Credits
 
-**Source code:** MIT — see [`LICENSE`](./LICENSE).
-
-**Product layer:** The watermark + $11 unlock is a product-layer constraint, not a source-license restriction. You can fork the code, run it locally with your own API key, and modify it however you like. The compiled-output watermark is enforced by Puppeteer overlay, not by source license.
-
-**Forked from:** [open-carrusel](https://github.com/Hainrixz/open-carrusel) (MIT) — the original Next.js carousel maker.
-
-**Design format:** [Open Design DESIGN.md](https://github.com/nexu-io/open-design) (Apache-2.0) — portable, agent-readable design system format.
+**Dual-License Model:** This project is split-licensed to support open-source software and open-content design assets:
+- **Code:** Licensed under [GNU Affero General Public License v3.0](./LICENSE-CODE) (AGPL-3.0). All Next.js pages, API endpoints, components, backend spawners, and utility code fall under this copyleft license.
+- **Content & Presets:** Licensed under [Creative Commons Attribution-ShareAlike 4.0](./LICENSE-CONTENT) (CC-BY-SA-4.0). All Markdown design files, theme presets, assets, and documentation fall under this share-alike license.
+- Check the root [LICENSE](./LICENSE) overview file for additional terms.
 
 **Author:** `tushar2704 <tushar.inseec@gmail.com>` — sole author, no co-authors, no AI attribution.
 

@@ -33,7 +33,8 @@ export function parseDesignMd(id: string, content: string): Theme {
     ? categoryStr
     : "General") as ThemeCategory;
 
-  const atmosphereMatch = content.match(/^>\s*(.+)$/m);
+  // Atmosphere = the first `>` line that is NOT "Category:" or "Depth Layering:"
+  const atmosphereMatch = content.match(/^>\s*(?!Category:|Depth Layering:)(.+)$/m);
   const atmosphere = atmosphereMatch ? atmosphereMatch[1].trim() : "";
 
   const sourceMatch = content.match(/Source inspiration:\s*(.+)$/m);
