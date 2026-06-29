@@ -4,7 +4,7 @@ This file is read by AI coding agents (Claude Code, Codex, Cursor, Gemini, Antig
 
 ## What is Slidr?
 
-Slidr is a CLI-agnostic AI carousel maker for LinkedIn, Instagram, and TikTok. Users bring their own LLM (any OpenAI-compatible base URL + API key) or use a coding CLI (Antigravity recommended). It ships with 15 themes, 8 platform sizes, non-removable watermark, and a $11 lifetime unlock via Lemon Squeezy.
+Slidr is a CLI-agnostic AI carousel maker for LinkedIn, Instagram, and TikTok. Users bring their own LLM (any OpenAI-compatible base URL + API key) or use a coding CLI (Antigravity recommended). It ships with 115 themes, 8 platform sizes, non-removable watermark, and a $11 lifetime unlock via Lemon Squeezy.
 
 ## Architecture
 
@@ -33,7 +33,7 @@ Slidr is a CLI-agnostic AI carousel maker for LinkedIn, Instagram, and TikTok. U
 
 - `POST /api/chat` — LLM adapter SSE streaming (HTTP or CLI)
 - `GET/PUT /api/llm-config` — LLM config (baseURL, apiKey, model, mode, cli)
-- `GET /api/themes` — List 15 theme presets
+- `GET /api/themes` — List 115 theme presets
 - `GET /api/license/status` — License validity
 - `POST /api/license/activate` — Activate Lemon Squeezy key
 - `POST /api/carousels/[id]/export` — Export PNG ZIP or PDF (auto-selected by platform)
