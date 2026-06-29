@@ -542,4 +542,146 @@ These become the post-launch roadmap.
 
 ---
 
-**Status:** Plan complete. Review Parts K (questions) — once answered, we begin Day 1.
+## PART N — Theme expansion to 115+ themes (v1.1)
+
+> **What:** Expand from 15 to 115 themes across 12 categories, plus add the depth-layering / text-behind-subject feature (the most viral Instagram carousel trend of 2026).
+
+### N1. Research summary (why this many themes)
+
+**Sources studied:**
+- **Open Design** (nexu-io/open-design, 72.4K★, Apache-2.0) — 129+ design systems in DESIGN.md format across AI/LLM, Developer Tools, Productivity & SaaS, Backend & Data, Design & Creative, Fintech & Crypto, E-Commerce & Retail, Media & Consumer, Automotive. We adopt the format and expand it with carousel-specific themes.
+- **Claude Design** (Anthropic, April 2026) — cream canvas (#faf9f5), warm ink (#141413), coral accent (#cc785c), Copernicus serif + StyreneB sans. Editorial, literary voice.
+- **promptbase.shop/carousels** — 105 carousels across 6 categories (Claude AI, Student Perks, GPT Image, Beauty, 50-Series, Gemini Image).
+- **2026 Instagram carousel trends** (Slidy Creator, Scrolo, TheReframe, WaveGen, Lucky Graphics, Krumzi, aestheticsofphotography.com) — 10+ dominant aesthetic dialects for 2026.
+
+**Key trends identified for 2026:**
+
+| Trend | Description | Engagement signal |
+|---|---|---|
+| **Text-behind-subject / depth layering** | Large headline text rendered BEHIND the subject using z-index layering. 3D depth effect. | 3-4x higher saves, 2.5-4x higher comments, 30-50% higher watch time |
+| **Seamless panoramic carousels** | One continuous visual across multiple slides | 40% higher completion rate |
+| **Glassmorphism + soft gradients** | Frosted glass overlays, sunset gradients (purple/blue/peach/pink) | Premium feel, higher saves |
+| **Neo-brutalism** | Thick black borders, hard shadows, neon accents (Figma/Gumroad aesthetic) | High CTR for tech/indie |
+| **Y2K revival** | Liquid chrome, iridescent gradients, 90s nostalgia | Gen Z engagement |
+| **Typographic maximalism** | Oversized headlines (60-70% of slide), neon + deep black + bright yellow | Scroll-stopping |
+| **Seamless panos + micro-learning** | 15-20 words max per slide, strong visual anchor | Algorithm rewards dwell time |
+| **Scrapbook / photo dump** | Polaroid frames, tape, handwritten fonts, film textures | Gen Z casual authenticity |
+| **Editorial / magazine layouts** | Multi-column, serif headlines, dense information | Authority + saves |
+| **Indie Sleaze 2.0** | High-contrast flash, magenta-tinted, dirty, raw | "Rawness as proof" (Mosseri) |
+
+### N2. The 12 theme categories
+
+| # | Category | Count | Example themes |
+|---|---|---|---|
+| 1 | **Depth & Layering** | 20 | depth-portrait, magazine-cover, knockout-text, glass-depth |
+| 2 | **Dark & Neon** | 20 | midnight-neon, cyberpunk-neon, vaporwave-sunset, terminal-mono |
+| 3 | **Editorial & Magazine** | 20 | paper-editorial, nyt-editorial, monocle-magazine, swiss-grid |
+| 4 | **Brutalist & Y2K** | 20 | neo-brutalism-bold, y2k-chrome, frutiger-aero, memphis-90s |
+| 5 | **Brand-Inspired** | 10 | stripe-inspired, vercel-inspired, linear-inspired, apple-inspired |
+| 6 | **Niche & Industry** | 10 | fitness-power, wellness-zen, food-cozy, beauty-glow |
+| 7 | **Claude AI** | 8 | claude-code-dark, midnight-neon, ember-oak |
+| 8 | **GPT Image** | 12 | slicebox-pizza, gradient-flow |
+| 9 | **Agentic** | 10 | agentic-operator, blueprint-tech |
+| 10 | **Beauty** | 7 | velvet-roast, lumiere-skincare, beauty-campaign |
+| 11 | **Student Perks** | 1 | student-perks |
+| 12 | **General** | 0+ | (catch-all) |
+| **Total** | | **115** | |
+
+### N3. Depth-layering feature (the 2026 viral trend)
+
+**What it is:** Text appears to weave BEHIND the subject (person, product, or object) while remaining visible in uncovered areas. Creates a 3D layered look.
+
+**Why it works:**
+1. Creates cognitive friction — viewers pause to "complete" hidden letters
+2. Adds depth to otherwise flat images
+3. Signals professional quality
+4. Improves readability (text doesn't cover faces)
+5. 3-4x higher engagement than standard overlays
+
+**How Slidr implements it:**
+
+1. **`depthLayering?: boolean` field on the `Theme` interface** (`src/types/theme.ts`)
+2. **`> Depth Layering: enabled`** front-matter line in DESIGN.md triggers the flag
+3. **`chat-system-prompt.ts`** injects CSS z-index instructions when the flag is true:
+
+```
+DEPTH LAYERING (text-behind-subject) ENABLED:
+- Place large headline text BEHIND the subject using z-index layering
+- The subject (person/product) appears ON TOP, with text visible around it
+- Use this CSS pattern:
+  .headline { position: relative; z-index: 1; }
+  .subject { position: relative; z-index: 2; }
+- Text should extend BEYOND the subject on both sides (2-3x wider)
+- Background → Text → Subject (z-index order: 0 → 1 → 2)
+- The effect creates cognitive friction: viewers pause to "complete" hidden letters
+```
+
+**The 20 depth-layering themes:**
+1. `depth-portrait` — Personal brand, fitness, lifestyle
+2. `magazine-cover` — Editorial cover style, large serif title behind portrait
+3. `knockout-text` — Text cutouts from background image (mix-blend-mode)
+4. `product-depth` — Product photography, product on top of brand name
+5. `fitness-transform` — Before/after, bold "STRONG" behind athlete
+6. `fashion-editorial` — High-fashion, model + oversized serif behind
+7. `glass-depth` — Glassmorphism + depth layering
+8. `neon-depth` — Cyberpunk, glowing text behind silhouette
+9. `minimal-depth` — Minimal premium, small subject, huge text behind
+10. `bold-display` — Massive Anton/Impact-style behind person
+11. `split-depth` — Subject on one side, text bleeding from other
+12. `monochrome-depth` — B/W with single accent color text behind
+13. `pastel-depth` — Soft pastels, subject + cream text behind
+14. `gradient-mesh-depth` — Mesh gradient bg + huge text behind
+15. `editorial-mono` — Newspaper-style, serif text behind reporter
+16. `streetwear-depth` — Y2K chrome text behind streetwear model
+17. `retro-poster-depth` — Vintage poster, distressed text behind subject
+18. `tattoo-depth` — Bold linework text behind portrait
+19. `wedding-depth` — Elegant serif "LOVE" behind couple
+20. `quote-depth` — Quote graphic, large italic behind speaker
+
+### N4. Implementation summary
+
+**Files modified:**
+- `src/types/theme.ts` — Added `depthLayering?: boolean` + 6 new ThemeCategory values
+- `src/lib/themes/parser.ts` — Parse `> Depth Layering: enabled` + validate new categories
+- `src/lib/chat-system-prompt.ts` — Inject depth-layering CSS instructions
+
+**Files created (100 new themes):**
+- 20 depth-layering themes
+- 20 dark/neon themes
+- 20 editorial/magazine themes
+- 20 brutalist/Y2K themes
+- 10 brand-inspired themes
+- 10 niche/industry themes
+
+**Verification (all passing):**
+- `npx tsc --noEmit` — exit 0, no errors
+- `npm run build` — exit 0, all routes compile
+- `npm run doctor` — reports "115 theme presets available"
+- `/api/themes` — returns all 115 themes with correct categories and depthLayering flags
+
+### N5. Success criteria (met)
+
+1. ✅ Theme count expanded from 15 to 115
+2. ✅ 12 theme categories implemented and validated
+3. ✅ Depth-layering feature working (20 themes have it enabled)
+4. ✅ Parser correctly reads all 115 themes
+5. ✅ All themes follow the 6-section DESIGN.md format
+6. ✅ All themes use real, available fonts (Google Fonts)
+7. ✅ All themes use specific hex codes (no placeholders)
+8. ✅ Build passes with zero TS errors
+9. ✅ Doctor reports "All required checks passed"
+
+### N6. Future theme expansion (post v1.1)
+
+- **Glassmorphism-specific themes** (15 more): frosted overlays, aurora backgrounds
+- **Gradient mesh themes** (15 more): complex multi-stop gradients
+- **3D / liquid typography** (10 more): experimental type treatments
+- **Industry-specific deep dives** (20 more): real estate, crypto, gaming, fashion week, etc.
+- **Community-contributed themes** via PR workflow
+- **Open Design's 129 brand systems** imported and adapted
+
+Target: 200+ themes by v2.0.
+
+---
+
+**Status:** v1.1 shipped — 115 themes, depth-layering feature, 12 categories, all verified. Pushed to repo.

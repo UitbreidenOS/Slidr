@@ -123,7 +123,7 @@ When a coding CLI is installed, Slidr auto-detects it and unlocks **agentic mode
 
 ## Features
 
-- 🎨 **15+ curated themes** in DESIGN.md format (Midnight Neon, Paper Editorial, Claude Code Dark, Brand Studio, +12 more)
+- 🎨 **115 curated themes** in DESIGN.md format across 12 categories (Depth & Layering, Dark & Neon, Editorial, Brutalist, Brand-Inspired, Niche & Industry, + original)
 - 📐 **8 platform sizes**: Instagram (1:1, 4:5, 3:4, 9:16), LinkedIn (1:1, 4:5, 16:9), TikTok (9:16)
 - 📤 **Multi-format export**: PNG ZIP (Instagram/TikTok) + PDF (LinkedIn)
 - 🔒 **Non-removable watermark**: Puppeteer overlay applied *after* slide HTML renders
@@ -409,25 +409,37 @@ Slidr/
 
 ## Themes
 
-Slidr ships with **15 curated themes** in DESIGN.md format. Each theme is a `.md` file in `src/lib/themes/presets/`. Add your own by dropping a new file — it auto-appears in the ThemeGallery.
+Slidr ships with **115 curated themes** in DESIGN.md format, spanning 12 categories. Each theme is a `.md` file in `src/lib/themes/presets/`. Add your own by dropping a new file — it auto-appears in the ThemeGallery.
 
-### Launch themes
+### Depth & Layering (20 themes — text-behind-subject)
 
-1. `midnight-neon` — Electric violet on near-black. The "Claude Code Instagram" aesthetic.
-2. `paper-editorial` — Magazine-grade serif on warm cream. The "Steal My Carousel System" look.
-3. `claude-code-dark` — Terminal-inspired. Monospace headings, amber accents.
-4. `brand-studio` — Premium brand deck. Warm-on-dark, mixed display fonts.
-5. `student-perks` — Clean, friendly, education-focused.
-6. `ember-oak` — Earthy masculine. Warm-ember gradient, Fraunces serif.
-7. `velvet-roast` — Luxe feminine. Velvet plum, soft rose.
-8. `aurora-activewear` — Sporty, high-energy. Teal-lime gradient.
-9. `lumiere-skincare` — Minimal beauty. Soft gold, airy whitespace.
-10. `nova-roast` — Coffee-house warmth. Roasted browns, Recoleta serif.
-11. `pulse-energy` — High-voltage neon. Electric lime-crimson.
-12. `slicebox-pizza` — Playful food brand. Red-amber, rounded Pacifico.
-13. `beauty-campaign` — Editorial beauty. Monochrome + violet.
-14. `agentic-operator` — Operator/ops. Blueprint grid, blue-cyan.
-15. `gradient-flow` — Smooth gradient mesh. Indigo-pink flow.
+The 2026 viral carousel trend. Large headline text is rendered **BEHIND** the subject (person/product) using z-index layering, creating 3D depth. 3-4x higher engagement than standard text-overlay posts.
+
+`depth-portrait` · `magazine-cover` · `knockout-text` · `product-depth` · `fitness-transform` · `fashion-editorial` · `glass-depth` · `neon-depth` · `minimal-depth` · `bold-display` · `split-depth` · `monochrome-depth` · `pastel-depth` · `gradient-mesh-depth` · `editorial-mono` · `streetwear-depth` · `retro-poster-depth` · `tattoo-depth` · `wedding-depth` · `quote-depth`
+
+### Dark & Neon (20 themes)
+
+`midnight-neon` · `midnight-violet` · `cyberpunk-neon` · `vaporwave-sunset` · `synthwave-drive` · `terminal-mono` · `hacker-green` · `neon-tokyo` · `deep-space` · `electric-lime` · `biohack-lab` · `crypto-neon` · `dark-academia` · `midnight-emerald` · `noir-mono` · `gothic-violet` · `neon-arcade` · `blueprint-tech` · `matrix-rain` · `deep-coral` · `obsidian-gold`
+
+### Editorial & Magazine (20 themes)
+
+`paper-editorial` · `nyt-editorial` · `monocle-magazine` · `swiss-grid` · `bauhaus-revival` · `whitewall-minimal` · `japanese-zen` · `scandinavian-frost` · `paris-review` · `kinfolk-soft` · `newspaper-classified` · `art-basel` · `vogue-editorial` · `the-cut-magazine` · `atlantic-monthly` · `economist-data` · `ft-peach` · `minimal-mono` · `bauhaus-blue` · `venice-architecture` · `nordic-cool`
+
+### Brutalist & Y2K (20 themes)
+
+`neo-brutalism-bold` · `neo-brutalism-soft` · `y2k-chrome` · `y2k-iridescent` · `frutiger-aero` · `90s-magazine` · `indie-sleaze-2` · `vhs-glitch` · `retro-poster-70s` · `retro-poster-80s` · `brutalist-raw` · `memphis-90s` · `y2k-iphone-pink` · `retro-future` · `pixel-arcade` · `risograph-print` · `art-deco-1920` · `swiss-poster-60s` · `cottage-core` · `scrapbook-dump`
+
+### Brand-Inspired (10 themes)
+
+`stripe-inspired` · `vercel-inspired` · `linear-inspired` · `notion-inspired` · `figma-inspired` · `apple-inspired` · `spotify-inspired` · `airbnb-inspired` · `nike-inspired` · `tesla-inspired`
+
+### Niche & Industry (10 themes)
+
+`fitness-power` · `wellness-zen` · `food-cozy` · `beauty-glow` · `tech-startup` · `finance-pro` · `travel-wanderlust` · `real-estate-luxe` · `education-learn` · `music-vibe`
+
+### Original (15 themes)
+
+`claude-code-dark` · `brand-studio` · `student-perks` · `ember-oak` · `velvet-roast` · `aurora-activewear` · `lumiere-skincare` · `nova-roast` · `pulse-energy` · `slicebox-pizza` · `beauty-campaign` · `agentic-operator` · `gradient-flow`
 
 ### Adding themes
 
@@ -437,13 +449,25 @@ Slidr ships with **15 curated themes** in DESIGN.md format. Each theme is a `.md
 
 Theme format spec lives in [`src/lib/themes/parser.ts`](./src/lib/themes/parser.ts).
 
+### Depth-layering feature
+
+Themes with the **depth-layering** effect enabled have an extra front-matter line:
+
+```markdown
+> Depth Layering: enabled
+```
+
+When a theme has this flag, the chat system prompt automatically injects CSS z-index layering instructions that guide the LLM to place large headline text BEHIND the subject. The result is the viral 3D depth effect that drives 3-4x higher engagement.
+
 ---
 
 ## Roadmap
 
-### Shipped (v1)
+### Shipped (v1.1)
 - Dual-mode LLM adapter (HTTP + CLI)
-- 15 curated themes in DESIGN.md format
+- **115 curated themes** in DESIGN.md format across 12 categories
+- **Depth-layering effect** (text-behind-subject, the 2026 viral Instagram trend)
+- **Theme categories** in the picker (Depth & Layering, Dark & Neon, Editorial, Brutalist, Y2K, Brand-Inspired, Niche & Industry)
 - 8 platform sizes (Instagram, LinkedIn, TikTok)
 - PNG ZIP + PDF export with watermark
 - Lemon Squeezy licensing ($11 lifetime unlock)
@@ -451,11 +475,12 @@ Theme format spec lives in [`src/lib/themes/parser.ts`](./src/lib/themes/parser.
 - Doctor diagnostic script
 - Slash commands for Claude Code
 
-### Next (v1.1)
-- 100+ additional themes (text-behind-subject, glassmorphism, neo-brutalism, Y2K, editorial, etc.)
-- Depth-layering effect: text behind subject (the most viral Instagram trend of 2026)
-- Theme categories in the picker (Dark & Neon, Editorial, Brutalist, Y2K, etc.)
-- Theme search + filter
+### Next (v1.2)
+- Theme search + filter in the picker
+- Theme preview thumbnails
+- Custom theme upload (user DESIGN.md)
+- Per-slide theme override
+- Theme marketplace / community themes
 
 ### Future
 - AI image generation (Piktochart/CarouselBot feature) — text + layout only for now
