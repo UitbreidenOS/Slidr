@@ -121,7 +121,7 @@ export default function DashboardPage() {
         <div className="max-w-5xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold">Slidr</h1>
+              <h1 className="text-2xl font-bold">Slidr by Uitbreiden</h1>
               <p className="text-sm text-muted-foreground mt-1">
                 Create LinkedIn, Instagram & TikTok carousels with AI
               </p>
