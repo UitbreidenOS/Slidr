@@ -264,48 +264,104 @@ for (let i = 1; i <= 115; i++) {
 }
 
 // ============================================================================
-// BATCH 3: Retro 70s Depth Layering
+// BATCH 3: Retro 70s - Depth Layering (authentic recreation)
+// Colors: Aged Cream (#f5e6d3), Burnt Orange (#c2410c), Mustard (#ca8a04),
+//         Forest Green (#15803d), Deep Brown (#2d1810)
+// Font: Anton (poster energy), Special Elite (typewriter body)
+// Rules: text BEHIND subject, sunburst motif, thick poster border, paper texture
 // ============================================================================
-const generateRetro70sDepthSlide = (title, num) => `
-<div style="width:100%;height:100%;background:linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:12px solid #ea580c;font-family:'Bebas Neue', sans-serif;">
-  
-  <!-- Coffee stain / vintage noise overlay (simulated with radial gradients) -->
-  <div style="position:absolute;width:200%;height:200%;background:radial-gradient(circle at 30% 20%, rgba(146,64,14,0.05) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(146,64,14,0.08) 0%, transparent 30%);top:-50%;left:-50%;pointer-events:none;z-index:0;"></div>
-  
-  <!-- Text Layer (Behind Object) -->
-  <h1 style="position:absolute;z-index:10;font-size:220px;font-weight:400;background:linear-gradient(135deg, #ea580c 0%, #ca8a04 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:-0.02em;line-height:0.9;text-align:center;width:90%;">
-    ${title}
-  </h1>
-  
-  <h1 style="position:absolute;z-index:30;font-size:220px;font-weight:400;color:transparent;text-transform:uppercase;letter-spacing:-0.02em;line-height:0.9;text-align:center;width:90%;-webkit-text-stroke:2px #ea580c;">
-    ${title}
-  </h1>
-  
-  <!-- Foreground Object (Interleaved between text layers for depth) -->
-  <div style="z-index:20;width:55%;height:65%;background-color:#4d7c0f;border-radius:200px 200px 0 0;box-shadow:0 30px 60px rgba(69,26,3,0.3);border:4px solid #fef3c7;display:flex;align-items:flex-end;justify-content:center;padding-bottom:40px;">
-    <div style="font-family:'Special Elite', serif;color:#fef3c7;font-size:32px;letter-spacing:0.1em;background:#ea580c;padding:12px 24px;border-radius:8px;">VINTAGE ${num}</div>
-  </div>
-</div>
-`;
 
-const retroAspects = ["ig-4:5", "ig-1:1", "li-4:5", "tt-9:16"];
-for (let i = 1; i <= 15; i++) {
+const sunburstSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><g transform='translate(300,300)'>${Array.from({length:24},(_,i)=>{const a=i*(360/24)*Math.PI/180;const a2=(i+0.5)*(360/24)*Math.PI/180;const r=280;const x1=Math.cos(a)*r,y1=Math.sin(a)*r,x2=Math.cos(a2)*r,y2=Math.sin(a2)*r;const fill=i%2===0?'%23ca8a04':'%23c2410c';return `<polygon points='0,0 ${x1.toFixed(1)},${y1.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}' fill='${fill}' opacity='0.85'/>`;}).join('')}</g></svg>`;
+
+const retro70sVariants = [
+  // 1. Original flagship — the one user loved
+  { headline: "GROW<br/>YOUR<br/>BRAND", sub: "Social Media Strategy", body: "5 proven tactics for 2024 growth", num: "01", bg: "#f5e6d3", accent: "#c2410c", mustard: "#ca8a04", green: "#15803d" },
+  // 2. Bold quote
+  { headline: "YOUR<br/>STORY<br/>MATTERS", sub: "Content Creation", body: "Start telling it today", num: "02", bg: "#fef3c7", accent: "#c2410c", mustard: "#ca8a04", green: "#15803d" },
+  // 3. Travel poster feel
+  { headline: "MAKE<br/>IT<br/>COUNT", sub: "Productivity Tips", body: "Work smarter, not harder", num: "03", bg: "#f5e6d3", accent: "#7c2d12", mustard: "#ca8a04", green: "#166534" },
+  // 4. Warm mustard variant
+  { headline: "LEVEL<br/>UP<br/>NOW", sub: "Career Growth", body: "The roadmap to success", num: "04", bg: "#fde68a", accent: "#92400e", mustard: "#78350f", green: "#15803d" },
+  // 5. Deep brown accent
+  { headline: "LEAD<br/>THE<br/>WAY", sub: "Leadership Insights", body: "Principles that last a lifetime", num: "05", bg: "#f5e6d3", accent: "#451a03", mustard: "#ca8a04", green: "#15803d" },
+  // 6. Forest green primary
+  { headline: "BUILD<br/>IN<br/>PUBLIC", sub: "Startup Journey", body: "Share every milestone", num: "06", bg: "#f5e6d3", accent: "#15803d", mustard: "#ca8a04", green: "#14532d" },
+  // 7. Energetic orange
+  { headline: "SHIP<br/>IT<br/>FAST", sub: "Product Launch", body: "From idea to live in 7 days", num: "07", bg: "#fef3c7", accent: "#ea580c", mustard: "#d97706", green: "#15803d" },
+  // 8. Minimal text
+  { headline: "THINK<br/>BIG", sub: "Vision & Goals", body: "Dream big. Start small. Act now.", num: "08", bg: "#f5e6d3", accent: "#c2410c", mustard: "#ca8a04", green: "#15803d" },
+  // 9. Dark headline
+  { headline: "STAY<br/>BOLD", sub: "Personal Branding", body: "Own your space online", num: "09", bg: "#fde68a", accent: "#7c2d12", mustard: "#92400e", green: "#14532d" },
+  // 10. Avocado green
+  { headline: "CREATE<br/>DAILY", sub: "Creator Economy", body: "Consistency is the secret weapon", num: "10", bg: "#f0fdf4", accent: "#c2410c", mustard: "#ca8a04", green: "#15803d" },
+  // 11. Spice it up
+  { headline: "EARN<br/>YOUR<br/>PLACE", sub: "Hustle Culture", body: "Every rep counts", num: "11", bg: "#f5e6d3", accent: "#b45309", mustard: "#ca8a04", green: "#15803d" },
+  // 12. Poster headline
+  { headline: "BREAK<br/>THE<br/>RULES", sub: "Design Thinking", body: "Convention is the enemy of innovation", num: "12", bg: "#fef3c7", accent: "#c2410c", mustard: "#ca8a04", green: "#166534" },
+  // 13. Motivational
+  { headline: "SHOW<br/>UP<br/>DAILY", sub: "Discipline Over Motivation", body: "The secret no one talks about", num: "13", bg: "#f5e6d3", accent: "#9a3412", mustard: "#ca8a04", green: "#15803d" },
+  // 14. Sepia tone
+  { headline: "MASTER<br/>YOUR<br/>CRAFT", sub: "Skill Development", body: "10,000 hours starts today", num: "14", bg: "#fde68a", accent: "#7c2d12", mustard: "#92400e", green: "#14532d" },
+  // 15. Bold finale
+  { headline: "GO<br/>VIRAL", sub: "Growth Hacking", body: "Engineer your own luck", num: "15", bg: "#fef3c7", accent: "#c2410c", mustard: "#ca8a04", green: "#15803d" },
+];
+
+const retroAspects = ["ig-4:5", "ig-1:1", "li-4:5", "tt-9:16", "ig-4:5"];
+
+for (let i = 0; i < retro70sVariants.length; i++) {
+  const v = retro70sVariants[i];
   const aspect = retroAspects[i % retroAspects.length];
-  const html = generateRetro70sDepthSlide("RETRO<br/>VIBES", i);
+
+  const html = `
+<div style="width:100%;height:100%;background-color:${v.bg};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:10px solid ${v.accent};box-sizing:border-box;font-family:Anton, sans-serif;">
+
+  <!-- Vintage paper texture (coffee stain radial overlays) -->
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 20% 15%, rgba(146,64,14,0.06) 0%, transparent 45%), radial-gradient(ellipse at 80% 85%, rgba(146,64,14,0.09) 0%, transparent 40%), radial-gradient(ellipse at 60% 40%, rgba(194,65,12,0.04) 0%, transparent 50%);z-index:0;pointer-events:none;"></div>
+
+  <!-- Sunburst motif (bottom-centre) -->
+  <div style="position:absolute;bottom:-120px;left:50%;transform:translateX(-50%);width:500px;height:500px;background-image:url('data:image/svg+xml,${sunburstSvg}');background-size:contain;background-repeat:no-repeat;background-position:center;opacity:0.22;z-index:1;"></div>
+
+  <!-- HEADLINE — behind the subject (z-index:10) -->
+  <h1 style="position:absolute;z-index:10;font-family:Anton,sans-serif;font-size:180px;font-weight:400;line-height:0.9;letter-spacing:-0.02em;text-transform:uppercase;text-align:center;background:linear-gradient(135deg,${v.accent} 0%,${v.mustard} 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;width:90%;margin:0;">${v.headline}</h1>
+
+  <!-- HEADLINE outline layer (same text, on top of subject for depth) -->
+  <h1 style="position:absolute;z-index:30;font-family:Anton,sans-serif;font-size:180px;font-weight:400;line-height:0.9;letter-spacing:-0.02em;text-transform:uppercase;text-align:center;color:transparent;-webkit-text-stroke:1.5px ${v.accent};width:90%;margin:0;opacity:0.6;">${v.headline}</h1>
+
+  <!-- SUBJECT — foreground object (z-index:20, between the two headline layers) -->
+  <div style="z-index:20;position:relative;display:flex;flex-direction:column;align-items:center;gap:0;">
+    <!-- Circle shape with subject number -->
+    <div style="width:220px;height:220px;background:radial-gradient(circle at 35% 35%,${v.mustard},${v.accent});border-radius:50%;box-shadow:0 20px 50px rgba(69,26,3,0.35);border:6px solid ${v.bg};display:flex;align-items:center;justify-content:center;">
+      <span style="font-family:Anton,sans-serif;font-size:80px;font-weight:400;color:${v.bg};letter-spacing:-0.02em;">${v.num}</span>
+    </div>
+    <!-- Caption strip below circle -->
+    <div style="margin-top:18px;background:${v.accent};padding:10px 28px;display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <span style="font-family:Anton,sans-serif;font-size:22px;color:${v.bg};letter-spacing:0.08em;text-transform:uppercase;">${v.sub}</span>
+      <span style="font-family:'Special Elite',serif;font-size:15px;color:${v.bg};opacity:0.85;letter-spacing:0.04em;">${v.body}</span>
+    </div>
+  </div>
+
+  <!-- Corner starburst accents -->
+  <div style="position:absolute;top:18px;left:18px;width:44px;height:44px;background:radial-gradient(circle,${v.mustard} 30%,transparent 70%);opacity:0.7;z-index:5;border-radius:50%;"></div>
+  <div style="position:absolute;top:18px;right:18px;width:44px;height:44px;background:radial-gradient(circle,${v.mustard} 30%,transparent 70%);opacity:0.7;z-index:5;border-radius:50%;"></div>
+  <div style="position:absolute;bottom:18px;left:18px;width:44px;height:44px;background:radial-gradient(circle,${v.mustard} 30%,transparent 70%);opacity:0.7;z-index:5;border-radius:50%;"></div>
+  <div style="position:absolute;bottom:18px;right:18px;width:44px;height:44px;background:radial-gradient(circle,${v.mustard} 30%,transparent 70%);opacity:0.7;z-index:5;border-radius:50%;"></div>
+
+</div>
+`.trim();
 
   templates.push({
-    id: "template-" + templateCounter++,
-    name: "Retro 70s Depth Layering " + i,
+    id: "template-retro70s-" + (i + 1),
+    name: i === 0 ? "Retro 70s - Depth Layering" : `Retro 70s - Depth Layering ${i + 1}`,
     aspectRatio: aspect,
-    slides: [{ id: id(), html: html, order: 0, notes: "Auto-generated Retro 70s Depth Layering template." }],
+    slides: [{ id: id(), html, order: 0, notes: "Retro 70s depth-layering template — text sits behind a foreground subject. Inspired by 1970s concert & travel posters." }],
     referenceImages: [],
     chatSessionId: null,
     isTemplate: true,
-    tags: ["retro", "depth layering", "70s"],
+    tags: ["retro", "depth layering", "70s", "poster"],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
 }
 
 fs.writeFileSync(DEST, JSON.stringify({ templates }, null, 2));
-console.log(`Successfully generated ${templates.length} templates (Batch 1 + Batch 2 + Batch 3) at ${DEST}`);
+console.log(`Successfully generated ${templates.length} templates at ${DEST}`);
