@@ -33,11 +33,15 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-xs font-medium text-muted-foreground mb-1">
-          {role === "user" ? "You" : "Carrusel AI"}
+          {role === "user" ? "You" : "Slidr by Uitbreiden"}
         </div>
         <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-          {content}
-          {isStreaming && (
+          {content || (isStreaming ? (
+            <span className="text-muted-foreground flex items-center gap-2">
+              <span className="animate-pulse">AI agent is working on your carousel (this may take a few minutes)...</span>
+            </span>
+          ) : "")}
+          {isStreaming && content && (
             <span className="oc-caret inline-block w-1.5 h-4 bg-accent ml-0.5 align-text-bottom" />
           )}
         </div>

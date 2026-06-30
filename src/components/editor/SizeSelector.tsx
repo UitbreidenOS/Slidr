@@ -53,17 +53,20 @@ export function SizeSelector({ value, onChange }: SizeSelectorProps) {
         {ratios.map((ratio) => {
           const dims = DIMENSIONS[ratio];
           const isActive = value === ratio;
+          const shortRatio = ratio.split("-")[1]; // e.g. "4:5"
+          const friendlyName = dims.label.replace(PLATFORM_META[selectedPlatform].label + " ", ""); // e.g. "Portrait"
           return (
             <button
               key={ratio}
               onClick={() => onChange(ratio)}
               className={cn(
-                "slidr-press flex flex-col items-center gap-1 px-2 py-1.5 rounded-lg text-xs transition-colors flex-1",
+                "slidr-press relative flex flex-col items-center gap-1 px-2 py-1.5 rounded-lg text-xs transition-colors flex-1",
                 isActive
                   ? "bg-foreground text-background"
                   : "hover:bg-muted text-muted-foreground"
               )}
               aria-label={`${dims.label} (${ratio})`}
+              title={dims.label}
             >
               <div
                 className={cn(
@@ -75,9 +78,12 @@ export function SizeSelector({ value, onChange }: SizeSelectorProps) {
                   height: Math.min(20, (dims.height / dims.width) * 20) || 20,
                 }}
               />
-              <span className="font-mono">{ratio}</span>
+              <div className="flex flex-col items-center">
+                <span className="font-mono font-bold leading-none mb-0.5">{shortRatio}</span>
+                <span className="text-[10px] leading-none opacity-80">{friendlyName}</span>
+              </div>
               {dims.recommended && (
-                <span className="text-[10px] opacity-60">★</span>
+                <span className="text-[10px] opacity-60 absolute top-1 right-2" title="Recommended">★</span>
               )}
             </button>
           );

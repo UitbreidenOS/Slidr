@@ -12,6 +12,17 @@ interface TemplateCardProps {
   onDelete: (id: string) => void;
 }
 
+const platformLabels: Record<string, string> = {
+  "ig-1:1": "Instagram (1:1)",
+  "ig-4:5": "Instagram (4:5)",
+  "ig-3:4": "Instagram (3:4)",
+  "ig-9:16": "Instagram (9:16)",
+  "li-1:1": "LinkedIn (1:1)",
+  "li-4:5": "LinkedIn (4:5)",
+  "li-16:9": "LinkedIn (16:9)",
+  "tt-9:16": "TikTok (9:16)",
+};
+
 export function TemplateCard({ template, onUse, onDelete }: TemplateCardProps) {
   return (
     <div className="rounded-xl border border-border bg-surface p-4 group hover:border-accent/50 hover:shadow-md hover:-translate-y-0.5 transition-[translate,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]">
@@ -30,7 +41,7 @@ export function TemplateCard({ template, onUse, onDelete }: TemplateCardProps) {
       </div>
       <h3 className="font-semibold text-sm truncate">{template.name}</h3>
       <p className="text-xs text-muted-foreground mt-0.5 truncate">
-        {template.slides.length} slide{template.slides.length !== 1 ? "s" : ""} &middot; {template.aspectRatio}
+        {template.slides.length} slide{template.slides.length !== 1 ? "s" : ""} &middot; {platformLabels[template.aspectRatio] || template.aspectRatio}
       </p>
       <div className="flex items-center gap-2 mt-3">
         <Button
