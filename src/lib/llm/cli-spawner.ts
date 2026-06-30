@@ -85,8 +85,10 @@ export function spawnCli(
   let stderrBuf = "";
   const STDERR_CAP = 8192;
   child.stderr?.on("data", (chunk: Buffer) => {
+    const text = chunk.toString();
+    onEvent({ type: "verbose", verboseText: text });
     if (stderrBuf.length < STDERR_CAP) {
-      stderrBuf = (stderrBuf + chunk.toString()).slice(-STDERR_CAP);
+      stderrBuf = (stderrBuf + text).slice(-STDERR_CAP);
     }
   });
 

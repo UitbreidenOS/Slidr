@@ -11,6 +11,7 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  verboseContent?: string;
 }
 
 interface ChatPanelProps {
@@ -153,6 +154,14 @@ export function ChatPanel({
                         : m
                     )
                   );
+                } else if (data.type === "verbose" && typeof data.verboseText === "string") {
+                  setMessages((prev) =>
+                    prev.map((m) =>
+                      m.id === assistantId
+                        ? { ...m, verboseContent: (m.verboseContent || "") + data.verboseText }
+                        : m
+                    )
+                  );
                 } else if (data.type === "result" && typeof data.text === "string") {
                   accumulated = data.text; // result is the final complete text
                   setMessages((prev) =>
@@ -283,6 +292,7 @@ export function ChatPanel({
             key={msg.id}
             role={msg.role}
             content={msg.content}
+            verboseContent={msg.verboseContent}
             isStreaming={
               isStreaming &&
               msg.role === "assistant" &&

@@ -1,15 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Bot, User } from "lucide-react";
+import { Bot, User, ChevronDown, ChevronRight, Terminal } from "lucide-react";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
+  verboseContent?: string;
   isStreaming?: boolean;
 }
 
-export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
+export function ChatMessage({ role, content, verboseContent, isStreaming }: ChatMessageProps) {
+  const [showVerbose, setShowVerbose] = useState(false);
+
   return (
     <div
       className={cn(
@@ -35,6 +39,7 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
         <div className="text-xs font-medium text-muted-foreground mb-1">
           {role === "user" ? "You" : "Slidr by Uitbreiden"}
         </div>
+        
         <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
           {content || (isStreaming ? (
             <span className="text-muted-foreground flex items-center gap-2">
@@ -45,6 +50,24 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
             <span className="oc-caret inline-block w-1.5 h-4 bg-accent ml-0.5 align-text-bottom" />
           )}
         </div>
+
+        {verboseContent && (
+          <div className="mt-3">
+            <button
+              onClick={() => setShowVerbose(!showVerbose)}
+              className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+            >
+              <Terminal className="h-3 w-3" />
+              {showVerbose ? "Hide agent thinking" : "Show agent thinking"}
+              {showVerbose ? <ChevronDown className="h-3 w-3 ml-1" /> : <ChevronRight className="h-3 w-3 ml-1" />}
+            </button>
+            {showVerbose && (
+              <div className="mt-2 p-3 bg-black/5 dark:bg-black/40 rounded-lg text-[11px] font-mono text-muted-foreground overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto border border-border">
+                {verboseContent}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

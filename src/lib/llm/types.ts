@@ -49,8 +49,9 @@ export interface LlmTool {
 }
 
 export interface LlmStreamEvent {
-  type: "token" | "tool_call" | "result" | "error" | "session";
+  type: "token" | "tool_call" | "result" | "error" | "session" | "verbose";
   text?: string;
+  verboseText?: string;
   toolCall?: LlmToolCall;
   sessionId?: string;
   error?: string;
