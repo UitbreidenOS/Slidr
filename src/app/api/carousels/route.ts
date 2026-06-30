@@ -11,9 +11,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, aspectRatio } = body as {
+    const { name, aspectRatio, themeId } = body as {
       name?: string;
       aspectRatio?: AspectRatio;
+      themeId?: string;
     };
 
     if (!name || typeof name !== "string" || !name.trim()) {
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
       ? (aspectRatio as AspectRatio)
       : "ig-4:5";
 
-    const carousel = await createCarousel(name.trim(), ratio);
+    const carousel = await createCarousel(name.trim(), ratio, themeId);
     return NextResponse.json(carousel, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });

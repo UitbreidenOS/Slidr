@@ -25,7 +25,8 @@ export async function getCarousel(id: string): Promise<Carousel | null> {
 
 export async function createCarousel(
   name: string,
-  aspectRatio: AspectRatio
+  aspectRatio: AspectRatio,
+  themeId?: string
 ): Promise<Carousel> {
   const data = await load();
   const carousel: Carousel = {
@@ -36,6 +37,7 @@ export async function createCarousel(
     referenceImages: [],
     chatSessionId: null,
     isTemplate: false,
+    themeId,
     tags: [],
     createdAt: now(),
     updatedAt: now(),

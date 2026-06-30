@@ -29,6 +29,13 @@ export function LlmConfigModal({
   const [selectedCli, setSelectedCli] = useState<string | null>(config.cli ?? null);
   const [saving, setSaving] = useState(false);
   const [showKey, setShowKey] = useState(false);
+  const [cliStatus, setCliStatus] = useState<{
+    working: boolean;
+    installed: boolean;
+    models: string[];
+    error?: string;
+  } | null>(null);
+  const [loadingCli, setLoadingCli] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -37,6 +44,22 @@ export function LlmConfigModal({
       setApiKey(config.apiKey);
       setModel(config.model);
       setSelectedCli(config.cli ?? null);
+      
+      // Fetch CLI status
+      setLoadingCli(true);
+      fetch("/api/llm-config/cli-status")
+        .then((res) => res.json())
+        .then((data) => {
+          setCliStatus(data);
+          if (data.working && data.models.length > 0 && config.mode === "cli") {
+            // Pre-select model from CLI if it's currently empty or invalid
+            if (!config.model || !data.models.includes(config.model)) {
+              setModel(data.models[0]);
+            }
+          }
+        })
+        .catch((err) => console.error("CLI status check failed", err))
+        .finally(() => setLoadingCli(false));
     }
   }, [open, config]);
 
@@ -230,29 +253,59 @@ export function LlmConfigModal({
 
           {/* CLI selector (only in cli mode) */}
           {mode === "cli" && detectedClis.length > 0 && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Select CLI</label>
-              <div className="flex flex-col gap-2">
-                {detectedClis.map((cli) => (
-                  <button
-                    key={cli.type}
-                    onClick={() => setSelectedCli(cli.type)}
-                    className={cn(
-                      "slidr-press flex items-center justify-between px-3 py-2 rounded-lg text-sm border transition-colors",
-                      selectedCli === cli.type
-                        ? "border-accent bg-accent/5"
-                        : "border-border hover:bg-muted"
-                    )}
-                  >
-                    <span className="font-medium">{cli.name}</span>
-                    {cli.recommended && (
-                      <span className="text-[10px] bg-accent text-accent-foreground px-2 py-0.5 rounded-full">
-                        Recommended
-                      </span>
-                    )}
-                  </button>
-                ))}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Select CLI</label>
+                <div className="flex flex-col gap-2">
+                  {detectedClis.map((cli) => (
+                    <div
+                      key={cli.type}
+                      className={cn(
+                        "flex items-center justify-between px-3 py-2 rounded-lg text-sm border transition-colors bg-surface",
+                        selectedCli === cli.type
+                          ? "border-accent bg-accent/5"
+                          : "border-border"
+                      )}
+                    >
+                      <span className="font-medium">{cli.name}</span>
+                      <div className="flex items-center gap-2">
+                        {loadingCli ? (
+                          <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                        ) : cliStatus?.working ? (
+                          <span className="flex items-center gap-1 text-xs text-green-500 font-semibold bg-green-500/10 px-2 py-0.5 rounded-full">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                            Connected
+                          </span>
+                        ) : (
+                          <span className="text-xs text-red-500 font-semibold bg-red-500/10 px-2 py-0.5 rounded-full">
+                            Offline
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {cliStatus?.working && cliStatus.models.length > 0 && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">CLI Model Selection</label>
+                  <select
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent"
+                  >
+                    {cliStatus.models.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[10px] text-muted-foreground">
+                    Available models queried dynamically from the Antigravity CLI.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
