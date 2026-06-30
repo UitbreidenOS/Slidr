@@ -263,5 +263,49 @@ for (let i = 1; i <= 115; i++) {
   });
 }
 
+// ============================================================================
+// BATCH 3: Retro 70s Depth Layering
+// ============================================================================
+const generateRetro70sDepthSlide = (title, num) => `
+<div style="width:100%;height:100%;background:linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:12px solid #ea580c;font-family:'Bebas Neue', sans-serif;">
+  
+  <!-- Coffee stain / vintage noise overlay (simulated with radial gradients) -->
+  <div style="position:absolute;width:200%;height:200%;background:radial-gradient(circle at 30% 20%, rgba(146,64,14,0.05) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(146,64,14,0.08) 0%, transparent 30%);top:-50%;left:-50%;pointer-events:none;z-index:0;"></div>
+  
+  <!-- Text Layer (Behind Object) -->
+  <h1 style="position:absolute;z-index:10;font-size:220px;font-weight:400;background:linear-gradient(135deg, #ea580c 0%, #ca8a04 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;letter-spacing:-0.02em;line-height:0.9;text-align:center;width:90%;">
+    ${title}
+  </h1>
+  
+  <h1 style="position:absolute;z-index:30;font-size:220px;font-weight:400;color:transparent;text-transform:uppercase;letter-spacing:-0.02em;line-height:0.9;text-align:center;width:90%;-webkit-text-stroke:2px #ea580c;">
+    ${title}
+  </h1>
+  
+  <!-- Foreground Object (Interleaved between text layers for depth) -->
+  <div style="z-index:20;width:55%;height:65%;background-color:#4d7c0f;border-radius:200px 200px 0 0;box-shadow:0 30px 60px rgba(69,26,3,0.3);border:4px solid #fef3c7;display:flex;align-items:flex-end;justify-content:center;padding-bottom:40px;">
+    <div style="font-family:'Special Elite', serif;color:#fef3c7;font-size:32px;letter-spacing:0.1em;background:#ea580c;padding:12px 24px;border-radius:8px;">VINTAGE ${num}</div>
+  </div>
+</div>
+`;
+
+const retroAspects = ["ig-4:5", "ig-1:1", "li-4:5", "tt-9:16"];
+for (let i = 1; i <= 15; i++) {
+  const aspect = retroAspects[i % retroAspects.length];
+  const html = generateRetro70sDepthSlide("RETRO<br/>VIBES", i);
+
+  templates.push({
+    id: "template-" + templateCounter++,
+    name: "Retro 70s Depth Layering " + i,
+    aspectRatio: aspect,
+    slides: [{ id: id(), html: html, order: 0, notes: "Auto-generated Retro 70s Depth Layering template." }],
+    referenceImages: [],
+    chatSessionId: null,
+    isTemplate: true,
+    tags: ["retro", "depth layering", "70s"],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+}
+
 fs.writeFileSync(DEST, JSON.stringify({ templates }, null, 2));
-console.log(`Successfully generated ${templates.length} templates (Batch 1 + Batch 2) at ${DEST}`);
+console.log(`Successfully generated ${templates.length} templates (Batch 1 + Batch 2 + Batch 3) at ${DEST}`);
