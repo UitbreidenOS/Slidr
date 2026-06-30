@@ -9,9 +9,9 @@ interface AspectRatioSelectorProps {
 }
 
 const RATIOS: { value: AspectRatio; label: string; icon: { w: number; h: number } }[] = [
-  { value: "ig-1:1", label: "Square", icon: { w: 16, h: 16 } },
-  { value: "ig-4:5", label: "Portrait", icon: { w: 16, h: 20 } },
-  { value: "ig-9:16", label: "Story", icon: { w: 12, h: 22 } },
+  { value: "ig-1:1", label: "Insta Square", icon: { w: 16, h: 16 } },
+  { value: "ig-4:5", label: "Insta Portrait", icon: { w: 16, h: 20 } },
+  { value: "ig-9:16", label: "Insta Story", icon: { w: 12, h: 22 } },
   { value: "li-4:5", label: "LinkedIn", icon: { w: 16, h: 20 } },
   { value: "tt-9:16", label: "TikTok", icon: { w: 12, h: 22 } },
 ];
@@ -36,14 +36,17 @@ export function AspectRatioSelector({
         >
           <div
             className={cn(
-              "border-2 rounded-sm",
+              "border-2 rounded-sm mb-1",
               value === ratio.value
                 ? "border-background"
                 : "border-muted-foreground"
             )}
             style={{ width: ratio.icon.w, height: ratio.icon.h }}
           />
-          <span className="font-mono">{ratio.value}</span>
+          <div className="flex flex-col items-center text-center">
+            <span className="font-mono font-bold leading-none mb-0.5">{ratio.value.split("-")[1]}</span>
+            <span className="text-[10px] leading-none opacity-80">{ratio.label}</span>
+          </div>
         </button>
       ))}
     </div>
