@@ -42,15 +42,17 @@ export function TemplateCard({ template, onUse, onDelete }: TemplateCardProps) {
           Use Template
           <ArrowRight className="h-3 w-3" />
         </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={() => onDelete(template.id)}
-          aria-label="Delete template"
-        >
-          <Trash2 className="h-3 w-3" />
-        </Button>
+        {!template.id.startsWith("template-") && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={() => onDelete(template.id)}
+            aria-label="Delete template"
+          >
+            <Trash2 className="h-3 w-3" />
+          </Button>
+        )}
       </div>
     </div>
   );

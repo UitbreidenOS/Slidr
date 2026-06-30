@@ -12,7 +12,6 @@ import { CreateFromSourceDialog } from "@/components/ui/create-from-source-dialo
 import { BrandSetup } from "@/components/brand/BrandSetup";
 import { SlideRenderer } from "@/components/editor/SlideRenderer";
 import { TemplateGallery } from "@/components/templates/TemplateGallery";
-import { BrowseThemeGallery } from "@/components/themes/BrowseThemeGallery";
 import type { Carousel } from "@/types/carousel";
 import type { BrandConfig } from "@/types/brand";
 
@@ -63,7 +62,7 @@ export default function DashboardPage() {
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCreateFromSourceDialog, setShowCreateFromSourceDialog] = useState(false);
-  const [activeTab, setActiveTab] = useState<"carousels" | "templates" | "themes" >("carousels");
+  const [activeTab, setActiveTab] = useState<"carousels" | "templates">("carousels");
 
   const handleCreate = useCallback(async (name: string, aspectRatio: string) => {
     const res = await fetch("/api/carousels", {
@@ -161,22 +160,10 @@ export default function DashboardPage() {
             >
               Templates
             </button>
-            <button
-              onClick={() => setActiveTab("themes")}
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === "themes"
-                  ? "border-accent text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Themes (115)
-            </button>
           </div>
 
           {activeTab === "templates" ? (
             <TemplateGallery />
-          ) : activeTab === "themes" ? (
-            <BrowseThemeGallery />
           ) : loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (

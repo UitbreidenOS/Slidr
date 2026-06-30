@@ -13,14 +13,21 @@ async function save(data: TemplatesData): Promise<void> {
   await writeData(FILE, data);
 }
 
+const PREBUILT_FILE = "prebuilt-templates.json";
+
 export async function listTemplates(): Promise<Template[]> {
   const data = await load();
-  return data.templates;
+  const prebuilt = await readDataSafe<TemplatesData>(PREBUILT_FILE, { templates: [] });
+  return [...prebuilt.templates, ...data.templates];
 }
 
 export async function getTemplate(id: string): Promise<Template | null> {
   const data = await load();
-  return data.templates.find((t) => t.id === id) ?? null;
+  let t = data.templates.find((t) => t.id === id);
+  if (t) return t;
+  
+  const prebuilt = await readDataSafe<TemplatesData>(PREBUILT_FILE, { templates: [] });
+  return prebuilt.templates.find((t) => t.id === id) ?? null;
 }
 
 export async function saveAsTemplate(
