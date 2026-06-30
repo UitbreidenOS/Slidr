@@ -4,11 +4,11 @@ import { TopBar } from "@/components/layout/TopBar";
 import { Calendar as CalendarIcon, Clock, Share2, Camera, BookOpen, CheckCircle2 } from "lucide-react";
 
 export default function CalendarPage() {
-  // Mock data for the calendar UI
+  // Mock data for the calendar UI with static dates to keep render pure
   const scheduledPosts = [
     {
       id: "1",
-      date: new Date(Date.now() + 86400000).toLocaleDateString(),
+      date: "7/1/2026",
       time: "10:00 AM",
       platform: "LinkedIn",
       title: "5 Tips for Remote Work (PDF Carousel)",
@@ -17,7 +17,7 @@ export default function CalendarPage() {
     },
     {
       id: "2",
-      date: new Date(Date.now() + 86400000 * 2).toLocaleDateString(),
+      date: "7/2/2026",
       time: "02:30 PM",
       platform: "Instagram",
       title: "UI Design Trends 2026",
@@ -26,7 +26,7 @@ export default function CalendarPage() {
     },
     {
       id: "3",
-      date: new Date(Date.now() - 86400000).toLocaleDateString(),
+      date: "6/29/2026",
       time: "09:15 AM",
       platform: "LinkedIn",
       title: "My Journey to $10k MRR",

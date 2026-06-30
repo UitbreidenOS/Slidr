@@ -39,7 +39,9 @@ export function BrandSetup({ open, onComplete, initialBrand }: BrandSetupProps) 
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (initialBrand) setBrand(initialBrand);
+    if (initialBrand) {
+      setTimeout(() => setBrand(initialBrand), 0);
+    }
   }, [initialBrand]);
 
   const handleSave = useCallback(async () => {

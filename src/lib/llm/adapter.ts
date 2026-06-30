@@ -1,5 +1,4 @@
 import { readDataSafe, writeData } from "@/lib/data";
-import { generateId } from "@/lib/utils";
 import type { LlmConfig, LlmMessage, LlmTool, LlmStreamEvent, CliInfo } from "./types";
 import { DEFAULT_CONFIG } from "./types";
 import { HttpClient } from "./http-client";
@@ -7,7 +6,7 @@ import { detectPreferredCli, detectCliByType } from "./cli-detector";
 import { spawnCli } from "./cli-spawner";
 import { spawnAntigravity } from "@/lib/antigravity";
 import { SLIDE_TOOLS } from "./tools";
-import { addSlide, updateSlide, deleteSlide, updateCarousel, getCarousel } from "@/lib/carousels";
+import { addSlide, updateSlide, deleteSlide, updateCarousel } from "@/lib/carousels";
 import OpenAI from "openai";
 
 const CONFIG_FILE = "llm-config.json";
@@ -199,7 +198,7 @@ async function generateHttp(
     const tools = getTools();
 
     // Multi-turn: stream, execute tool calls, continue
-    let currentMessages = [...messages];
+    const currentMessages = [...messages];
     const MAX_TOOL_ROUNDS = 15;
 
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {

@@ -23,7 +23,7 @@ export async function listTemplates(): Promise<Template[]> {
 
 export async function getTemplate(id: string): Promise<Template | null> {
   const data = await load();
-  let t = data.templates.find((t) => t.id === id);
+  const t = data.templates.find((t) => t.id === id);
   if (t) return t;
   
   const prebuilt = await readDataSafe<TemplatesData>(PREBUILT_FILE, { templates: [] });

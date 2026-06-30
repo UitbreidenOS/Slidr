@@ -1,5 +1,6 @@
 import puppeteer, { type Browser } from "puppeteer";
 import { readFile } from "fs/promises";
+import { existsSync } from "fs";
 import path from "path";
 import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
@@ -37,7 +38,6 @@ function getChromeExecutablePath(): string | undefined {
 
   for (const candidate of candidates) {
     try {
-      const { existsSync } = require("fs");
       if (existsSync(candidate)) return candidate;
     } catch {
       // ignore

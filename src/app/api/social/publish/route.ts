@@ -32,10 +32,10 @@ export async function POST(request: Request) {
         platform
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Social publish error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to publish" },
+      { error: (error as Error).message || "Failed to publish" },
       { status: 500 }
     );
   }

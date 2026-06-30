@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { YoutubeTranscript } from "youtube-transcript";
 import * as cheerio from "cheerio";
-import { createCarousel, getCarousel } from "@/lib/carousels";
+import { PDFParse } from "pdf-parse";
+import { createCarousel } from "@/lib/carousels";
 import { generateStream, getLlmConfig, detectPreferredCli } from "@/lib/llm/adapter";
 import { getBrand } from "@/lib/brand";
 import { getPreset } from "@/lib/style-presets";
 import { getTheme } from "@/lib/themes";
 import type { LlmStreamEvent } from "@/lib/llm/types";
+import type { AspectRatio } from "@/types/carousel";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,7 +19,7 @@ export async function POST(request: NextRequest) {
     type: "url" | "youtube" | "pdf" | "text";
     source: string;
     name?: string;
-    aspectRatio?: any;
+    aspectRatio?: string;
     stylePresetId?: string;
     themeId?: string;
   };
@@ -32,7 +34,7 @@ export async function POST(request: NextRequest) {
         type: formData.get("type") as "url" | "youtube" | "pdf" | "text",
         source: "", // handled below
         name: formData.get("name") as string,
-        aspectRatio: formData.get("aspectRatio"),
+        aspectRatio: formData.get("aspectRatio") as string,
         stylePresetId: formData.get("stylePresetId") as string,
         themeId: formData.get("themeId") as string,
       };
@@ -41,8 +43,8 @@ export async function POST(request: NextRequest) {
         const file = formData.get("file") as File;
         if (file) {
           const buffer = Buffer.from(await file.arrayBuffer());
-          const pdfParse = require("pdf-parse");
-          const pdfData = await pdfParse(buffer);
+          const parser = new PDFParse(new Uint8Array(buffer));
+          const pdfData = await parser.getText();
           body.source = pdfData.text;
         }
       } else {
@@ -51,7 +53,7 @@ export async function POST(request: NextRequest) {
     } else {
       body = await request.json();
     }
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Invalid request payload" }, { status: 400 });
   }
 
@@ -99,8 +101,8 @@ export async function POST(request: NextRequest) {
       if (source.startsWith("data:application/pdf;base64,")) {
         const b64 = source.split(",")[1];
         const buffer = Buffer.from(b64, "base64");
-        const pdfParse = require("pdf-parse");
-        const pdfData = await pdfParse(buffer);
+        const parser = new PDFParse(new Uint8Array(buffer));
+        const pdfData = await parser.getText();
         extractedText = pdfData.text.substring(0, 15000);
       } else {
         extractedText = source.substring(0, 15000);
@@ -118,22 +120,11 @@ export async function POST(request: NextRequest) {
 
   // 2. Create Carousel
   const carouselName = name || `Repurposed ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-  const ratio = aspectRatio || "ig-4:5";
+  const ratio = (aspectRatio as AspectRatio) || "ig-4:5";
   const carousel = await createCarousel(carouselName, ratio);
 
   // 3. System Prompt for Repurposing
   const brand = await getBrand();
-  const stylePreset = stylePresetId ? await getPreset(stylePresetId) : null;
-  const theme = themeId ? await getTheme(themeId) : null;
-
-  let effectiveMode: "http" | "cli" = "http";
-  if (config.mode === "cli") {
-    effectiveMode = "cli";
-  } else if (config.mode === "http") {
-    effectiveMode = "http";
-  } else {
-    effectiveMode = httpConfigured ? "http" : "cli";
-  }
 
   const basePrompt = `You are an expert content creator. Your task is to extract the key value from the provided source material and structure it into a compelling social media carousel (5-10 slides).
 Each slide MUST have a 'hook' or 'heading', some 'body' text, and use the 'create_slide' tool to save it.

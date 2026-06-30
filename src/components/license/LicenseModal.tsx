@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { X, Lock, Zap, Check, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 
 interface LicenseModalProps {
   open: boolean;
@@ -26,8 +25,10 @@ export function LicenseModal({ open, onClose }: LicenseModalProps) {
       fetch("/api/license/activate")
         .then((r) => r.json())
         .then(setCheckoutInfo);
-      setError(null);
-      setInputKey("");
+      setTimeout(() => {
+        setError(null);
+        setInputKey("");
+      }, 0);
     }
   }, [open]);
 

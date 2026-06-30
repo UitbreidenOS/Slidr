@@ -38,10 +38,10 @@ export async function POST(request: Request) {
       message: "Theme uploaded successfully",
       themeId
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Theme upload error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to upload theme" },
+      { error: (error as Error).message || "Failed to upload theme" },
       { status: 500 }
     );
   }

@@ -43,13 +43,17 @@ export function ChatPanel({
   // Load session ID and chat history from localStorage
   useEffect(() => {
     const storedSession = localStorage.getItem(`chat-session-${carouselId}`);
-    if (storedSession) setSessionId(storedSession);
-    try {
-      const storedMessages = localStorage.getItem(`chat-messages-${carouselId}`);
-      if (storedMessages) setMessages(JSON.parse(storedMessages));
-    } catch {
-      // ignore corrupted data
-    }
+    const storedMessages = localStorage.getItem(`chat-messages-${carouselId}`);
+    setTimeout(() => {
+      if (storedSession) setSessionId(storedSession);
+      if (storedMessages) {
+        try {
+          setMessages(JSON.parse(storedMessages));
+        } catch {
+          // ignore corrupted data
+        }
+      }
+    }, 0);
   }, [carouselId]);
 
   // Persist messages to localStorage

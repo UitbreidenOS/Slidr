@@ -41,10 +41,10 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ url: imageUrl });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Image generation error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to generate image" },
+      { error: (error as Error).message || "Failed to generate image" },
       { status: 500 }
     );
   }

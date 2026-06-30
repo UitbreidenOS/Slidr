@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Trash2, Grid3X3, Bookmark, Maximize2, Settings, Lock, Palette, Check } from "lucide-react";
+import { Trash2, Grid3X3, Bookmark, Maximize2, Settings, Lock, Palette } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -13,7 +13,6 @@ import { SlideFilmstrip } from "@/components/editor/SlideFilmstrip";
 import { SizeSelector } from "@/components/editor/SizeSelector";
 import { ExportButton } from "@/components/editor/ExportButton";
 import { CaptionPanel } from "@/components/editor/CaptionPanel";
-import { SafeZoneOverlay } from "@/components/editor/SafeZoneOverlay";
 import { FullscreenPreview } from "@/components/editor/FullscreenPreview";
 import { ThemeGallery } from "@/components/themes/ThemeGallery";
 import { LlmConfigModal } from "@/components/llm/LlmConfigModal";

@@ -9,7 +9,6 @@ const themeCache = new Map<string, Theme>();
  * Parse a DESIGN.md file (Open Design format) into a Theme object.
  */
 export function parseDesignMd(id: string, content: string): Theme {
-  const lines = content.split("\n");
   const nameMatch = content.match(/^#\s+Design System:\s*(.+)$/m);
   const name = nameMatch ? nameMatch[1].trim() : id;
 

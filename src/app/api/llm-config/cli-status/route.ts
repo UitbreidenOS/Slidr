@@ -63,12 +63,12 @@ export async function GET() {
       models: modelsList
     });
 
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json({
       installed: true,
       working: false,
       models: [],
-      error: error.message || "Failed to query CLI status"
+      error: (error as Error).message || "Failed to query CLI status"
     });
   }
 }

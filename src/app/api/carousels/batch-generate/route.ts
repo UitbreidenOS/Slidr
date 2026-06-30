@@ -38,10 +38,10 @@ export async function POST(request: Request) {
       carousels: createdCarousels
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Batch generate error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to start batch generation" },
+      { error: (error as Error).message || "Failed to start batch generation" },
       { status: 500 }
     );
   }

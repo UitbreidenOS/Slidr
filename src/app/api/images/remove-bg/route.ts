@@ -28,10 +28,10 @@ export async function POST(request: Request) {
     const dataUrl = `data:image/png;base64,${base64}`;
 
     return NextResponse.json({ url: dataUrl });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Remove BG error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to remove background" },
+      { error: (error as Error).message || "Failed to remove background" },
       { status: 500 }
     );
   }

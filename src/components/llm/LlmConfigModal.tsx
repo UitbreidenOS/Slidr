@@ -39,14 +39,16 @@ export function LlmConfigModal({
 
   useEffect(() => {
     if (open) {
-      setMode(config.mode);
-      setBaseURL(config.baseURL);
-      setApiKey(config.apiKey);
-      setModel(config.model);
-      setSelectedCli(config.cli ?? null);
+      setTimeout(() => {
+        setMode(config.mode);
+        setBaseURL(config.baseURL);
+        setApiKey(config.apiKey);
+        setModel(config.model);
+        setSelectedCli(config.cli ?? null);
+        setLoadingCli(true);
+      }, 0);
       
       // Fetch CLI status
-      setLoadingCli(true);
       fetch("/api/llm-config/cli-status")
         .then((res) => res.json())
         .then((data) => {
