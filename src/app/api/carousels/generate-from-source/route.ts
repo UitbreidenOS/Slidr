@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { YoutubeTranscript } from "youtube-transcript";
 import * as cheerio from "cheerio";
-const pdfParse = require("pdf-parse");
 import { createCarousel, getCarousel } from "@/lib/carousels";
 import { generateStream, getLlmConfig, detectPreferredCli } from "@/lib/llm/adapter";
 import { getBrand } from "@/lib/brand";
@@ -42,6 +41,7 @@ export async function POST(request: NextRequest) {
         const file = formData.get("file") as File;
         if (file) {
           const buffer = Buffer.from(await file.arrayBuffer());
+          const pdfParse = require("pdf-parse");
           const pdfData = await pdfParse(buffer);
           body.source = pdfData.text;
         }
@@ -99,6 +99,7 @@ export async function POST(request: NextRequest) {
       if (source.startsWith("data:application/pdf;base64,")) {
         const b64 = source.split(",")[1];
         const buffer = Buffer.from(b64, "base64");
+        const pdfParse = require("pdf-parse");
         const pdfData = await pdfParse(buffer);
         extractedText = pdfData.text.substring(0, 15000);
       } else {

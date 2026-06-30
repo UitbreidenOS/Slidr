@@ -11,7 +11,7 @@ interface CliSpec {
 
 // Probe order: Antigravity first (user requested it as the primary CLI)
 const CLI_SPECS: CliSpec[] = [
-  { type: "antigravity", name: "Antigravity CLI", binaries: ["agy", "antigravity"], recommended: true },
+  { type: "antigravity", name: "Antigravity CLI", binaries: ["agy"], recommended: true },
   { type: "claude", name: "Claude Code", binaries: ["claude"] },
   { type: "codex", name: "Codex CLI", binaries: ["codex"] },
   { type: "gemini", name: "Gemini CLI", binaries: ["gemini"] },
@@ -31,7 +31,7 @@ function probeBinary(bin: string): string | null {
     });
     if (result.status === 0 && result.stdout) {
       const first = result.stdout.split(/\r?\n/).find((l) => l.trim());
-      if (first && fs.existsSync(first.trim())) return first.trim();
+      if (first && fs.existsSync(first.trim())) return bin;
     }
   } catch {
     // ignore
