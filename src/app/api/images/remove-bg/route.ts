@@ -1,37 +1,68 @@
-import { NextResponse } from "next/server";
-import sharp from "sharp";
+import { NextRequest, NextResponse } from "next/server";
+import { getCarousel } from "@/lib/carousels";
+import { updateReferenceImageCutout } from "@/lib/carousels";
+import { removeBackground, saveCutout } from "@/lib/background-removal";
+import path from "path";
 
-export async function POST(request: Request) {
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 60; // Background removal can take time
+
+export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData();
-    const file = formData.get("file") as File;
+    const body = await request.json();
+    const { carouselId, imageId } = body;
 
-    if (!file) {
-      return NextResponse.json({ error: "File is required" }, { status: 400 });
+    if (!carouselId || !imageId) {
+      return NextResponse.json(
+        { error: "carouselId and imageId are required" },
+        { status: 400 }
+      );
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // Fetch carousel and find the reference image
+    const carousel = await getCarousel(carouselId);
+    if (!carousel) {
+      return NextResponse.json({ error: "Carousel not found" }, { status: 404 });
+    }
 
-    // In a full implementation, we'd use a background removal AI model here (e.g., rembg, fal.ai, remove.bg API).
-    // For this demonstration, we'll simulate it or apply a basic image transformation if no API is available.
-    // If the user has a BYOK API for image generation, they might have one for bg removal.
-    // We'll use sharp to convert to PNG and ensure it has an alpha channel, which is required for transparency.
-    // Actual background removal requires an AI model.
+    const refImage = carousel.referenceImages?.find((img) => img.id === imageId);
+    if (!refImage) {
+      return NextResponse.json(
+        { error: "Reference image not found" },
+        { status: 404 }
+      );
+    }
 
-    const processedBuffer = await sharp(buffer)
-      .ensureAlpha()
-      // .threshold() // Mock processing
-      .png()
-      .toBuffer();
+    // Update status to pending
+    await updateReferenceImageCutout(carouselId, imageId, "", "pending");
 
-    const base64 = processedBuffer.toString("base64");
-    const dataUrl = `data:image/png;base64,${base64}`;
+    // Get absolute path to the source image
+    const sourcePath = path.resolve(process.cwd(), "public", refImage.url);
 
-    return NextResponse.json({ url: dataUrl });
+    // Perform background removal
+    const result = await removeBackground(sourcePath);
+
+    if (!result.success || !result.buffer) {
+      // Update status to failed
+      await updateReferenceImageCutout(carouselId, imageId, "", "failed");
+      return NextResponse.json(
+        { error: result.error || "Background removal failed" },
+        { status: 500 }
+      );
+    }
+
+    // Save the cutout
+    const cutoutUrl = await saveCutout(carouselId, imageId, result.buffer);
+
+    // Update the reference image with cutout URL and ready status
+    await updateReferenceImageCutout(carouselId, imageId, cutoutUrl, "ready");
+
+    return NextResponse.json({ cutoutUrl });
   } catch (error) {
-    console.error("Remove BG error:", error);
+    console.error("Background removal error:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to remove background" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

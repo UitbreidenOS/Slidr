@@ -236,3 +236,46 @@ export async function removeReferenceImage(
   await save(data);
   return true;
 }
+
+export async function updateReferenceImageCutout(
+  carouselId: string,
+  imageId: string,
+  cutoutUrl: string,
+  cutoutStatus: "pending" | "ready" | "failed"
+): Promise<boolean> {
+  const data = await load();
+  const carousel = data.carousels.find((c) => c.id === carouselId);
+  if (!carousel || !carousel.referenceImages) return false;
+
+  const img = carousel.referenceImages.find((img) => img.id === imageId);
+  if (!img) return false;
+
+  img.cutoutUrl = cutoutUrl || undefined;
+  img.cutoutStatus = cutoutStatus;
+  carousel.updatedAt = now();
+  await save(data);
+  return true;
+}
+
+export async function updateReferenceImageCutout(
+  carouselId: string,
+  imageId: string,
+  cutoutUrl: string,
+  cutoutStatus: "pending" | "ready" | "failed" = "ready"
+): Promise<boolean> {
+  const data = await load();
+  const carousel = data.carousels.find((c) => c.id === carouselId);
+  if (!carousel || !carousel.referenceImages) return false;
+
+  const idx = carousel.referenceImages.findIndex((img) => img.id === imageId);
+  if (idx === -1) return false;
+
+  carousel.referenceImages[idx] = {
+    ...carousel.referenceImages[idx],
+    cutoutUrl,
+    cutoutStatus,
+  };
+  carousel.updatedAt = now();
+  await save(data);
+  return true;
+}

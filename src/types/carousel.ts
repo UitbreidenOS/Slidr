@@ -23,10 +23,12 @@ export interface Slide {
 
 export interface ReferenceImage {
   id: string;
-  url: string;       // e.g. "/uploads/abc.png"
-  absPath: string;    // absolute path for Claude to Read
-  name: string;       // original filename or description
+  url: string;           // e.g. "/uploads/abc.png"
+  absPath: string;        // absolute path for Claude to Read
+  name: string;           // original filename or description
   addedAt: string;
+  cutoutUrl?: string;     // e.g. "/uploads/cutout-abc.png" (background removed)
+  cutoutStatus?: "pending" | "ready" | "failed";  // status of background removal
 }
 
 export interface Carousel {

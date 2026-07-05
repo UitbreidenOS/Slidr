@@ -38,7 +38,8 @@ Use professional defaults: dark text on white/light backgrounds, Inter font, cle
 - Export format: ${exportFormat.toUpperCase()}
 - Slides: ${carousel.slides.length}/${MAX_SLIDES}
 ${carousel.slides.length > 0 ? carousel.slides.map((s) => `  - Slide ${s.order + 1} (ID: ${s.id})${s.notes ? ` — ${s.notes}` : ""}`).join("\n") : "  (no slides yet)"}
-${(carousel.referenceImages?.length ?? 0) > 0 ? `\n## Reference images (use Read to view these)\n${carousel.referenceImages.map((r) => `- "${r.name}" → ${r.absPath}`).join("\n")}` : ""}`
+${(carousel.referenceImages?.length ?? 0) > 0 ? `\n## Reference images (use Read to view these)
+${carousel.referenceImages.map((r) => `- "${r.name}" → ${r.absPath}${r.cutoutUrl ? ` (CUTOUT AVAILABLE: ${r.cutoutUrl})` : ""}`).join("\n")}` : ""}`
     : "";
 
   const depthLayeringSection = theme?.depthLayering
