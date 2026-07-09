@@ -471,6 +471,33 @@ When a theme has this flag, the chat system prompt automatically injects CSS z-i
 
 ---
 
+## Magic Cutout (Background Removal)
+
+### Overview
+The Magic Cutout feature lets you automatically remove the background from any reference image, producing a transparent PNG that the AI can use for depth‑layering slides.
+
+### Setup
+1. Obtain a Remove.bg API key from https://www.remove.bg/api and add it to `.env.local`:
+   ```
+   REMOVE_BG_API_KEY=your_key_here
+   ```
+   Each image processed costs ~ $0.03. If no key is set, Slidr falls back to a local implementation using the `rembg` package (or a simple Sharp fallback).
+2. Restart the dev server after adding the key.
+
+### Usage
+- **Single image**: In the Reference Images panel click the **Remove BG** button under a thumbnail. The UI shows a spinner while processing and a check‑mark when ready.
+- **Batch**: Click **Remove BG (Batch)** to process all images that don’t already have a cutout.
+- The cutout URL appears in the carousel prompt (`cutoutUrl`) so the LLM can place the subject on top of headline text.
+
+### Limitations
+- Remove.bg API rate limits may apply; batch processing runs sequentially to avoid hitting limits.
+- Local fallback works without an API key but may be slower and less accurate.
+
+### Cost warning
+The first time you invoke a background‑removal request the app will display a toast warning about the ~$0.03 per‑image cost. You can disable this warning in the UI settings if desired.
+
+---
+
 ## Roadmap
 
 ### Shipped (v1.1)

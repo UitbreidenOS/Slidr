@@ -17,7 +17,7 @@
     "build": "next build",
     "start": "next start",
     "stop": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true",
-    "lint": "eslint",
+    "test": "jest",
     "doctor": "node scripts/doctor.mjs"
   },
   "dependencies": {
@@ -55,7 +55,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
   }
 }
