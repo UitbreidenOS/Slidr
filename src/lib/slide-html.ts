@@ -1,6 +1,7 @@
 import type { AspectRatio } from "@/types/carousel";
 import { DIMENSIONS } from "@/types/carousel";
 import { previewWatermarkHtml } from "./watermark";
+import type { BrandConfig } from "@/types/brand";
 
 // Backward-compat: legacy ratios map to Instagram equivalents
 const LEGACY_MAP: Record<string, AspectRatio> = {
@@ -53,7 +54,7 @@ export function extractFontFamilies(html: string): string[] {
 export function wrapSlideHtml(
   slideHtml: string,
   aspectRatio: AspectRatio | string,
-  options?: { inlineFontCss?: string; showWatermark?: boolean; licenseValid?: boolean }
+  options?: { inlineFontCss?: string; showWatermark?: boolean; licenseValid?: boolean; brand?: BrandConfig }
 ): string {
   const ratio = resolveRatio(aspectRatio);
   const { width, height } = DIMENSIONS[ratio];
@@ -79,6 +80,23 @@ export function wrapSlideHtml(
       ? previewWatermarkHtml()
       : "";
 
+  let authorBadgeBlock = "";
+  if (options?.brand?.authorName || options?.brand?.authorHandle) {
+    const b = options.brand;
+    const avatar = b.authorAvatarUrl ? `<img src="${b.authorAvatarUrl}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;" />` : '';
+    const name = b.authorName ? `<div style="font-weight: 700; color: ${b.colors.primary}; font-size: 24px; line-height: 1.2;">${b.authorName}</div>` : '';
+    const handle = b.authorHandle ? `<div style="color: ${b.colors.secondary}; font-size: 18px; line-height: 1.2;">${b.authorHandle}</div>` : '';
+    authorBadgeBlock = `
+      <div style="position: absolute; bottom: 40px; left: 40px; display: flex; align-items: center; gap: 16px; font-family: '${b.fonts.body}', sans-serif; z-index: 50;">
+        ${avatar}
+        <div style="display: flex; flex-direction: column;">
+          ${name}
+          ${handle}
+        </div>
+      </div>
+    `;
+  }
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -92,6 +110,7 @@ export function wrapSlideHtml(
 </head>
 <body>
   ${slideHtml}
+  ${authorBadgeBlock}
   ${watermarkBlock}
 </body>
 </html>`;

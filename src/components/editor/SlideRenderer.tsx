@@ -4,12 +4,14 @@ import { useMemo, useRef, useEffect, useState, useCallback } from "react";
 import { wrapSlideHtml } from "@/lib/slide-html";
 import type { AspectRatio } from "@/types/carousel";
 import { DIMENSIONS } from "@/types/carousel";
+import type { BrandConfig } from "@/types/brand";
 
 interface SlideRendererProps {
   html: string;
   aspectRatio: AspectRatio;
   className?: string;
   style?: React.CSSProperties;
+  brand?: BrandConfig;
 }
 
 export function SlideRenderer({
@@ -17,14 +19,15 @@ export function SlideRenderer({
   aspectRatio,
   className,
   style,
+  brand,
 }: SlideRendererProps) {
   const outerRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
   const { width: slideW, height: slideH } = DIMENSIONS[aspectRatio];
 
   const srcDoc = useMemo(
-    () => wrapSlideHtml(html, aspectRatio),
-    [html, aspectRatio]
+    () => wrapSlideHtml(html, aspectRatio, { brand }),
+    [html, aspectRatio, brand]
   );
 
   const measure = useCallback(() => {

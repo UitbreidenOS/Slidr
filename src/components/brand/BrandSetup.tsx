@@ -131,6 +131,30 @@ export function BrandSetup({ open, onComplete, initialBrand }: BrandSetupProps) 
                   autoFocus
                 />
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Author Name</label>
+                  <Input
+                    value={brand.authorName || ""}
+                    onChange={(e) =>
+                      setBrand({ ...brand, authorName: e.target.value })
+                    }
+                    placeholder="John Doe"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Author Handle</label>
+                  <Input
+                    value={brand.authorHandle || ""}
+                    onChange={(e) =>
+                      setBrand({ ...brand, authorHandle: e.target.value })
+                    }
+                    placeholder="@johndoe"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
               <p className="text-xs text-muted-foreground">
                 This helps the AI maintain your brand identity across all
                 carousels.

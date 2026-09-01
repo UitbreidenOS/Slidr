@@ -20,6 +20,7 @@ import { SlideRenderer } from "./SlideRenderer";
 import type { Slide, AspectRatio } from "@/types/carousel";
 import { DIMENSIONS, MAX_SLIDES } from "@/types/carousel";
 import { cn } from "@/lib/utils";
+import type { BrandConfig } from "@/types/brand";
 
 interface SlideFilmstripProps {
   slides: Slide[];
@@ -31,6 +32,7 @@ interface SlideFilmstripProps {
   onAddSlideRequest?: () => void;
   onReorderSlides?: (slideIds: string[]) => void;
   isGenerating?: boolean;
+  brand?: BrandConfig;
 }
 
 function SortableSlideThumb({
@@ -43,6 +45,7 @@ function SortableSlideThumb({
   onSelect,
   onDelete,
   onUndo,
+  brand,
 }: {
   slide: Slide;
   index: number;
@@ -53,6 +56,7 @@ function SortableSlideThumb({
   onSelect: () => void;
   onDelete?: () => void;
   onUndo?: () => void;
+  brand?: BrandConfig;
 }) {
   const {
     attributes,
@@ -100,6 +104,7 @@ function SortableSlideThumb({
           html={slide.html}
           aspectRatio={aspectRatio}
           className="w-full h-full"
+          brand={brand}
         />
       </button>
 
@@ -153,6 +158,7 @@ export function SlideFilmstrip({
   onAddSlideRequest,
   onReorderSlides,
   isGenerating,
+  brand,
 }: SlideFilmstripProps) {
   const { width: slideW, height: slideH } = DIMENSIONS[aspectRatio];
   const thumbHeight = 80;
@@ -213,6 +219,7 @@ export function SlideFilmstrip({
                 onSelect={() => onActiveChange(index)}
                 onDelete={onDeleteSlide ? () => onDeleteSlide(slide.id) : undefined}
                 onUndo={onUndoSlide ? () => onUndoSlide(slide.id) : undefined}
+                brand={brand}
               />
             ))}
           </SortableContext>

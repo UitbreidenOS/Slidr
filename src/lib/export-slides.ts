@@ -8,6 +8,7 @@ import { wrapSlideHtml, extractFontFamilies } from "./slide-html";
 import { getInlinedFontCSS } from "./fonts";
 import { injectWatermarkIntoPage } from "./watermark";
 import { isLicensed } from "./license";
+import { getBrand } from "./brand";
 import type { Slide, AspectRatio } from "@/types/carousel";
 import { DIMENSIONS, getExportFormat } from "@/types/carousel";
 
@@ -116,9 +117,13 @@ export async function exportSlide(
   // Inline images
   const inlinedHtml = await inlineImages(slide.html);
 
+  // Fetch brand for author badge
+  const brand = await getBrand();
+
   // Build self-contained HTML
   const fullHtml = wrapSlideHtml(inlinedHtml, aspectRatio, {
     inlineFontCss: inlinedFontCss,
+    brand,
   });
 
   // Check license

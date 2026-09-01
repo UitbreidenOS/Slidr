@@ -22,6 +22,9 @@ export interface BrandConfig {
   fonts: BrandFonts;
   customFonts: CustomFont[];
   logoPath: string | null;
+  authorName?: string;
+  authorHandle?: string;
+  authorAvatarUrl?: string;
   styleKeywords: string[];
   createdAt: string;
   updatedAt: string;
@@ -42,6 +45,9 @@ export const DEFAULT_BRAND: BrandConfig = {
   },
   customFonts: [],
   logoPath: null,
+  authorName: "",
+  authorHandle: "",
+  authorAvatarUrl: "",
   styleKeywords: [],
   createdAt: "",
   updatedAt: "",

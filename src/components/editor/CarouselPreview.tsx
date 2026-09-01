@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SlideRenderer } from "./SlideRenderer";
 import { SafeZoneOverlay } from "./SafeZoneOverlay";
 import type { Slide, AspectRatio } from "@/types/carousel";
+import type { BrandConfig } from "@/types/brand";
 
 interface CarouselPreviewProps {
   slides: Slide[];
@@ -13,6 +14,7 @@ interface CarouselPreviewProps {
   activeIndex: number;
   onActiveChange: (index: number) => void;
   showSafeZones?: boolean;
+  brand?: BrandConfig;
 }
 
 export function CarouselPreview({
@@ -21,6 +23,7 @@ export function CarouselPreview({
   activeIndex,
   onActiveChange,
   showSafeZones = false,
+  brand,
 }: CarouselPreviewProps) {
   const slide = slides[activeIndex];
   const [prevIndex, setPrevIndex] = useState(activeIndex);
@@ -73,6 +76,7 @@ export function CarouselPreview({
             html={slide.html}
             aspectRatio={aspectRatio}
             style={{ width: "100%", height: "100%" }}
+            brand={brand}
           />
           <SafeZoneOverlay aspectRatio={aspectRatio} visible={showSafeZones} />
         </div>

@@ -19,6 +19,7 @@ import { LlmConfigModal } from "@/components/llm/LlmConfigModal";
 import { LicenseModal } from "@/components/license/LicenseModal";
 import type { Carousel, AspectRatio } from "@/types/carousel";
 import type { LlmConfig, CliInfo } from "@/lib/llm/types";
+import type { BrandConfig } from "@/types/brand";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -42,6 +43,7 @@ export default function CarouselEditorPage({ params }: PageProps) {
   const [showLicense, setShowLicense] = useState(false);
   const [llmConfig, setLlmConfig] = useState<LlmConfig | null>(null);
   const [detectedClis, setDetectedClis] = useState<CliInfo[]>([]);
+  const [brand, setBrand] = useState<BrandConfig | null>(null);
 
   // Confirm dialog state
   const [confirmState, setConfirmState] = useState<{
@@ -90,13 +92,26 @@ export default function CarouselEditorPage({ params }: PageProps) {
     }
   }, []);
 
+  const fetchBrand = useCallback(async () => {
+    try {
+      const res = await fetch("/api/brand");
+      if (res.ok) {
+        const data = await res.json();
+        setBrand(data);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   useEffect(() => {
     const load = async () => {
       await fetchCarousel();
       await fetchLlmConfig();
+      await fetchBrand();
     };
     load();
-  }, [fetchCarousel, fetchLlmConfig]);
+  }, [fetchCarousel, fetchLlmConfig, fetchBrand]);
 
   // Poll for carousel updates while AI is generating slides
   useEffect(() => {
@@ -256,6 +271,7 @@ export default function CarouselEditorPage({ params }: PageProps) {
         aspectRatio={carousel.aspectRatio}
         activeIndex={activeSlide}
         onActiveChange={setActiveSlide}
+        brand={brand || undefined}
       />
 
       {/* LLM Config Modal */}
@@ -425,6 +441,7 @@ export default function CarouselEditorPage({ params }: PageProps) {
             activeIndex={activeSlide}
             onActiveChange={setActiveSlide}
             showSafeZones={showSafeZones}
+            brand={brand || undefined}
           />
 
           {/* Caption panel */}
@@ -446,6 +463,7 @@ export default function CarouselEditorPage({ params }: PageProps) {
         onAddSlideRequest={handleAddSlideRequest}
         onReorderSlides={handleReorderSlides}
         isGenerating={isGenerating}
+        brand={brand || undefined}
       />
     </div>
   );

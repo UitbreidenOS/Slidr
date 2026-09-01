@@ -6,6 +6,7 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SlideRenderer } from "./SlideRenderer";
 import type { Slide, AspectRatio } from "@/types/carousel";
+import type { BrandConfig } from "@/types/brand";
 
 interface FullscreenPreviewProps {
   open: boolean;
@@ -14,6 +15,7 @@ interface FullscreenPreviewProps {
   aspectRatio: AspectRatio;
   activeIndex: number;
   onActiveChange: (index: number) => void;
+  brand?: BrandConfig;
 }
 
 export function FullscreenPreview({
@@ -23,6 +25,7 @@ export function FullscreenPreview({
   aspectRatio,
   activeIndex,
   onActiveChange,
+  brand,
 }: FullscreenPreviewProps) {
   const slide = slides[activeIndex];
 
@@ -75,6 +78,7 @@ export function FullscreenPreview({
               html={slide.html}
               aspectRatio={aspectRatio}
               style={{ width: "100%", height: "100%", maxWidth: 800 }}
+              brand={brand}
             />
           )}
 
