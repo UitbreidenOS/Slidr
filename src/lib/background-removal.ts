@@ -18,7 +18,7 @@ export async function removeBackgroundWithRemoveBg(
 ): Promise<BgRemovalResult> {
   try {
     const formData = new FormData();
-    const blob = new Blob([imageBuffer]);
+    const blob = new Blob([new Uint8Array(imageBuffer)]);
     formData.append("image_file", blob, "image.png");
     formData.append("size", "auto");
     formData.append("format", "png");

@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
         </div>
       `;
 
-      await addSlide(carousel.id, { html: styledHtml.trim(), notes: "Imported from markdown" });
+      await addSlide(carousel.id, styledHtml.trim(), "Imported from markdown");
     }
 
     return NextResponse.json({ carousel });

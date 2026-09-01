@@ -100,7 +100,7 @@ export function ReferenceImages({ carouselId, images, onImagesChange }: Referenc
       for (const img of pendingImages) {
         await handleRemoveBg(img);
       }
-      toast({ title: "Batch removal completed" });
+      toast({ title: "Batch removal completed", description: "All background removals finished" });
     } finally {
       setBatchProcessing(false);
     }
