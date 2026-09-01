@@ -65,17 +65,24 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"carousels" | "templates">("carousels");
 
   const handleCreate = useCallback(async (name: string, aspectRatio: string) => {
-    const res = await fetch("/api/carousels", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        aspectRatio,
-      }),
-    });
-    if (res.ok) {
-      const carousel = await res.json();
-      router.push(`/carousel/${carousel.id}`);
+    try {
+      const res = await fetch("/api/carousels", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          aspectRatio,
+        }),
+      });
+      if (res.ok) {
+        const carousel = await res.json();
+        router.push(`/carousel/${carousel.id}`);
+      } else {
+        alert("Failed to create carousel. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error: Could not connect to the server.");
     }
   }, [router]);
 
