@@ -14,7 +14,7 @@ interface CreateFromSourceDialogProps {
   onSuccess: (carouselId: string) => void;
 }
 
-type SourceType = "url" | "youtube" | "pdf" | "text";
+type SourceType = "url" | "youtube" | "pdf" | "text" | "markdown";
 
 export function CreateFromSourceDialog({
   open,
@@ -35,11 +35,37 @@ export function CreateFromSourceDialog({
     if (!source.trim()) return;
     setIsGenerating(true);
     setError(null);
-    setStatus("Extracting content...");
+    setStatus(type === "markdown" ? "Importing markdown..." : "Extracting content...");
 
     abortRef.current = new AbortController();
 
     try {
+      if (type === "markdown") {
+        const response = await fetch("/api/carousels/import-markdown", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: source.trim(),
+            name: name.trim() || undefined,
+            aspectRatio,
+          }),
+          signal: abortRef.current.signal,
+        });
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          throw new Error(err.error || "Failed to import markdown");
+        }
+
+        const data = await response.json();
+        setStatus("Complete!");
+        onSuccess(data.carousel.id);
+        onOpenChange(false);
+        setSource("");
+        setName("");
+        return;
+      }
+
       const response = await fetch("/api/carousels/generate-from-source", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -147,7 +173,7 @@ export function CreateFromSourceDialog({
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                 Source Type
               </label>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-5 gap-2">
                 <button
                   onClick={() => setType("url")}
                   className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-colors ${type === "url" ? "border-accent bg-accent/5 text-accent" : "border-border hover:bg-muted text-muted-foreground"}`}
@@ -176,6 +202,13 @@ export function CreateFromSourceDialog({
                   <Type className="h-5 w-5 mb-1" />
                   <span className="text-[10px] font-medium">Raw Text</span>
                 </button>
+                <button
+                  onClick={() => setType("markdown")}
+                  className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-colors ${type === "markdown" ? "border-accent bg-accent/5 text-accent" : "border-border hover:bg-muted text-muted-foreground"}`}
+                >
+                  <FileText className="h-5 w-5 mb-1" />
+                  <span className="text-[10px] font-medium">Markdown</span>
+                </button>
               </div>
             </div>
 
@@ -183,11 +216,17 @@ export function CreateFromSourceDialog({
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                 Content Source
               </label>
-              {type === "text" || type === "pdf" ? (
+              {type === "text" || type === "pdf" || type === "markdown" ? (
                 <textarea
                   value={source}
                   onChange={(e) => setSource(e.target.value)}
-                  placeholder={type === "pdf" ? "Paste extracted PDF text here for now (file upload coming soon)..." : "Paste your raw text, notes, or bullet points here..."}
+                  placeholder={
+                    type === "markdown"
+                      ? "Paste markdown here. Separate slides with '\\n---\\n'..."
+                      : type === "pdf"
+                      ? "Paste extracted PDF text here for now (file upload coming soon)..."
+                      : "Paste your raw text, notes, or bullet points here..."
+                  }
                   className="w-full h-32 px-3 py-2 text-sm rounded-md border border-input bg-transparent shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
                 />
               ) : (
