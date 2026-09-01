@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
+import fs from 'fs';
+import path from 'path';
 
 export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
     // 1. Fetch a font to use for Satori
-    // We'll use Inter from Google Fonts as a default
-    const fontResponse = await fetch('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2');
-    const fontData = await fontResponse.arrayBuffer();
+    const fontPath = path.resolve(process.cwd(), 'node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf');
+    const fontData = fs.readFileSync(fontPath);
 
     // 2. Define our SVG via Satori using standard HTML-like structure (React elements under the hood)
     const svg = await satori(
