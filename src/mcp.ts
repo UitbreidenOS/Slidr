@@ -11,7 +11,7 @@ import {
 import { z } from "zod";
 
 import { getBrand } from "./lib/brand";
-import { getThemes } from "./lib/themes";
+import { listThemes } from "./lib/themes";
 import { createCarousel, addSlide } from "./lib/carousels";
 
 const server = new Server(
@@ -95,14 +95,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "get_brand": {
         const brand = await getBrand();
         return {
-          content: [{ type: "text", text: JSON.stringify(brand, null, 2) }],
+          content: [{ type: "text" as const, text: JSON.stringify(brand, null, 2) }],
         };
       }
 
       case "list_themes": {
-        const themes = await getThemes();
+        const themes = await listThemes();
         return {
-          content: [{ type: "text", text: JSON.stringify(themes, null, 2) }],
+          content: [{ type: "text" as const, text: JSON.stringify(themes, null, 2) }],
         };
       }
 
@@ -112,8 +112,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return {
           content: [
             {
-              type: "text",
-              text: \`Carousel created successfully. ID: \${carousel.id}\nView it at: http://localhost:3000/carousel/\${carousel.id}\`,
+              type: "text" as const,
+              text: `Carousel created successfully. ID: ${carousel.id}\nView it at: http://localhost:3000/carousel/${carousel.id}`,
             },
           ],
         };
@@ -128,19 +128,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return {
           content: [
             {
-              type: "text",
-              text: \`Slide added successfully. Slide ID: \${slide.id}\`,
+              type: "text" as const,
+              text: `Slide added successfully. Slide ID: ${slide.id}`,
             },
           ],
         };
       }
 
       default:
-        throw new McpError(ErrorCode.MethodNotFound, \`Unknown tool: \${request.params.name}\`);
+        throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${request.params.name}`);
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new McpError(ErrorCode.InvalidParams, \`Invalid arguments: \${error.message}\`);
+      throw new McpError(ErrorCode.InvalidParams, `Invalid arguments: ${error.message}`);
     }
     throw error;
   }
